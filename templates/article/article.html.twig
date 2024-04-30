@@ -1,0 +1,63 @@
+{% extends "base.html.twig" %}
+{% block body %}
+{{ parent() }}
+<h5>la page {{ page }} </h5>
+{% endblock %}
+
+
+{# {{ dump(pers) }} #}
+{# <p> je m'appelle {{ pers['prenom'] }} {{ pers['nom'] }} et je suis sur la page {{ page}}</p> #}
+{# <ul>
+{% autoescape %}
+    {{ pers[2]['prenom']|raw }} {# var won't be escaped #}
+{# {% endautoescape %}  #}
+{# <li>{{ pers[2]['prenom']|raw ~ ' ' ~ pers[1]['nom']}}</li>
+<li>{{ 'hello'|length}}</li>
+<li>{{ 'hello'|upper}}</li> #}
+{# </ul> #}
+{#
+{{  }} => pour afficher
+{% %} => pour les testes
+{# #}{#  => pour les commentaires
+
+#}
+
+{# {% set prenom = 'martin' %}
+
+{% if prenom == 'martin' %}
+    {{ 'bienvenue sur notre site' }}
+{% elseif prenom == 'alain'%}
+    {{ ' bienvenue sur notre site'}}
+{% else %}
+    {{ 'au revoir' }}
+{% endif %} #}
+
+{# {{ 'heLLo'|lower|capitalize}} #}
+
+{# créons un tableau en twig qui s'appelle prenom et qui contient comme index age et comme valeur 18, et un autre index prenom et comme valeur mathieu
+Testons :
+- si l'age  est inférieur à 18 et afficher : vous n'êtes pas autorisé
+- si l'age est compris entre 18 et 40  et afficher : vous avez le profil 
+- si l'age est supérieur à 40 et afficher : c'est dommage  #}
+
+{# if #}
+{# {% set prenom = {'prenom':'mathieu','age':18} %}
+{{ dump(prenom)}}
+{% if prenom['age'] < 18 %}
+vous n'êtes pas autorisé
+{% elseif  prenom['age'] >= 18  and prenom['age'] <= 40 %}
+vous avez le profil
+{# {{ 'vous avez le profil' }} #}
+{# {% else %}
+c'est dommage
+ {% endif %}  #}
+
+ {# foreach($pers as $personne) => {% for personne in pers %} #}
+
+{# <ul>
+{% for personne in pers %}
+<li> {{ personne.prenom ~ ' ' ~ personne.nom}}</li>
+{% else %}
+
+{% endfor %}
+</ul> #}

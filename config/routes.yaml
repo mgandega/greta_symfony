@@ -3,3 +3,9 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+# profil:
+#     path: /profil/{id}
+#     controller: App\Controller\ConferencesController::index
+
+
