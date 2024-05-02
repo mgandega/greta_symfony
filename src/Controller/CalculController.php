@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class CalculController extends AbstractController
 {
     #[Route('/somme/{arg1}/{arg2}', name: 'somme', defaults: ['arg2'=>20], requirements:['arg2'=>'\d+'])]
-    public function index($arg1,$arg2): Response
+    public function somme($arg1,$arg2): Response
     {
         return new Response("le résultat est : ".($arg1 + $arg2));
     }

@@ -10,7 +10,7 @@
         {{ 'hello'|upper}} #}
     <div class="container">
         <div class="row">
-        {% for conference in conferences %}
+        
         <div class="col-sm-4">
         <div class="card border-secondary mb-3" style="max-width: 20rem;">
         <div class="card-header">{{ conference.titre}}</div>
@@ -18,14 +18,12 @@
         <p class="card-text">{{ conference.description }}</p>
         <h5 class="card-title">{{ conference.lieu }}</h5>
         <h5 class="card-title">{{ conference.date|date('d-m-Y') }}</h5>
-        <a href="{{ url('conference.details',{'id':conference.id})}}">Details de la conférence</a>
-        {% if conferences|length == 1 %}
+        {# <a href="{{path('conference.supp', {'id':conference.id})}}">Supprimer</a> #}
         <a href="{{path('conference.edit', {'id':conference.id})}}">Modifier</a>
-        {% endif %}
+        <a href="{{path('conference.supp', {'id':conference.id})}}">Supprimer</a>
         </div>
         </div>
         </div>
-        {% endfor %}
      </div>
 </div>
 {% endblock %}
