@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use DateTimeImmutable;
 use App\Entity\Conference;
+use App\Form\ConferenceType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -69,20 +70,35 @@ class ConferencsController extends AbstractController
     }
 
     #[Route('/conference/add', name: 'conference.add')]
-    public function add()
+    public function add(Request $request)
     {
         // si on a cliqué sur le bouton submit (cela veut dire que le tableau n'est pas vide)
         // si l'utilisateur à posté
-         if(!empty($_POST)){
-            $conference = new Conference();
-            $conference->setTitre($_POST['titre'])
-                ->setDescription($_POST['description'])
-                ->setLieu($_POST['lieu']);
-            $this->em->persist($conference); // enregistrer
-            $this->em->flush(); // valider l'enregistrement
-        }else{
-            return $this->render("conferences/formulaire.html.twig");
-        }
-        return $this->redirectToRoute("conference.index");
+        //  if(!empty($_POST)){
+        //     $conference = new Conference();
+        //     $conference->setTitre($_POST['titre'])
+        //         ->setDescription($_POST['description'])
+        //         ->setLieu($_POST['lieu']);
+        //     $this->em->persist($conference); // enregistrer
+        //     $this->em->flush(); // valider l'enregistrement
+        // }else{
+        //     return $this->render("conferences/formulaire.html.twig");
+        // }
+
+        $conference = new Conference();
+        $form = $this->createForm(ConferenceType::class, $conference);
+        
+    // ici je lie les données du formulaire avec l'objet conference s'il y'en a
+    // il hydrate les propriétés
+        $form->handleRequest($request);
+        if($form->isSubmitted() and $form->isvalid()){
+            $conference = $form->getData();
+            $this->em->persist($conference);
+            $this->em->flush();
+
+            return $this->redirectToRoute("conference.index");
+        } 
+
+        return $this->render("conferences/formulaire.html.twig",['form'=>$form->createView()]);
     }
 }
