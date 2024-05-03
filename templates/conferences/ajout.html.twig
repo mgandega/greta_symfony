@@ -2,33 +2,13 @@
 
 {% block title %}Formulaire d'ajout{% endblock %}
 {% block body %}
-
+<h4>Ajout de conférence</h4>
 {# <form action="/conference/add" method="post">
 <input type="text" name="titre" placeholder="titre" /> <br><br>
 <textarea name="description"  cols="30" rows="5" placeholder="description"></textarea><br><br>
 <input type="text" name="lieu" placeholder="lieu" /> <br><br>
 <input type="submit" name="ajouter" /> <br><br>
 </form> #}
-<div class="container">
-{{ form_start(form) }}
-<div class="row">
-<div class="col-sm-4">
-{{ form_row(form.titre) }}
-{# {{ form_widget(form.titre) }} #}
-</div>
-</div>
-<div class="row">
-<div class="col-sm-4">
-{{ form_row(form.description) }}
-{# {{ form_widget(form.titre) }} #}
-</div>
-</div>
-<div class="row">
-<div class="col-sm-4">
-{{ form_row(form.lieu) }}
-{# {{ form_widget(form.titre) }} #}
-</div>
-</div>
-{{ form_end(form)}}
-</div>
+{{ include('conferences/partials/formulaire.html.twig', {'button_label': 'Update'}) }}
+<input 
 {% endblock %}

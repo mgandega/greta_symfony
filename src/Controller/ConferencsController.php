@@ -13,9 +13,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ConferencsController extends AbstractController
 {
-  
+
     public $em;
-    public function __construct(EntityManagerInterface $manager){
+    public function __construct(EntityManagerInterface $manager)
+    {
         $this->em = $manager;
     }
 
@@ -24,9 +25,9 @@ class ConferencsController extends AbstractController
     public function index(): Response
     {
         // $manager->getRepository(Conference::class)->findAll() permet de recuperer toutes les conférences
-     $conferences = $this->em->getRepository(Conference::class)->findAll();
-     // ici on retourne le template conferences.html.twig par rapport aux parametres passés en arguments
-     return $this->render("conferences/conferences.html.twig", ['conferences' => $conferences]);
+        $conferences = $this->em->getRepository(Conference::class)->findAll();
+        // ici on retourne le template conferences.html.twig par rapport aux parametres passés en arguments
+        return $this->render("conferences/conferences.html.twig", ['conferences' => $conferences]);
     }
 
     #[Route('/conference/details/{id}', name: 'conference.details', requirements: ['id' => '\d+'])]
@@ -44,7 +45,7 @@ class ConferencsController extends AbstractController
     }
 
     #[Route('/conference/edit/{id}', name: 'conference.edit')]
-    public function editer($id)
+    public function editer(Request $request, $id)
     {
         // foreach ($this->conferences as $cle => $conference) {
         //     if ($conference['id'] == $id) {
@@ -52,13 +53,20 @@ class ConferencsController extends AbstractController
         //         $conferences[] = $conference;
         //     }
         // }
+
         $conference = $this->em->getRepository(Conference::class)->find($id);
-        $conference->setTitre('teste de titre');
-        // on utilise seulement le flush() si on veut supprimer ou modifier
-        // si on utilise persist() et flush(), on rajoutera une autre ligne dans la table
-        $this->manager->flush();
-        
-        return $this->redirectToRoute('conference.index'); 
+
+        $form = $this->createForm(ConferenceType::class, $conference);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() and $form->isvalid()) {
+            $conference = $form->getData();
+            // on utilise seulement le flush() si on veut supprimer ou modifier
+            // si on utilise persist() et flush(), on rajoutera une autre ligne dans la table
+            $this->em->flush();
+
+            return $this->redirectToRoute('conference.index');
+        }
+        return $this->render("conferences/edit.html.twig", ['form' => $form->createView()]);
     }
     #[Route('/conference/supp/{id}', name: 'conference.supp')]
     public function delete($id)
@@ -66,7 +74,7 @@ class ConferencsController extends AbstractController
         $conference = $this->em->getRepository(Conference::class)->find($id);
         $this->em->remove($conference); // pour supprimer
         $this->em->flush();
-        return $this->redirectToRoute('conference.index'); 
+        return $this->redirectToRoute('conference.index');
     }
 
     #[Route('/conference/add', name: 'conference.add')]
@@ -87,18 +95,18 @@ class ConferencsController extends AbstractController
 
         $conference = new Conference();
         $form = $this->createForm(ConferenceType::class, $conference);
-        
-    // ici je lie les données du formulaire avec l'objet conference s'il y'en a
-    // il hydrate les propriétés
+
+        // ici je lie les données du formulaire avec l'objet conference s'il y'en a
+        // il hydrate les propriétés
         $form->handleRequest($request);
-        if($form->isSubmitted() and $form->isvalid()){
+        if ($form->isSubmitted() and $form->isvalid()) {
             $conference = $form->getData();
             $this->em->persist($conference);
             $this->em->flush();
 
             return $this->redirectToRoute("conference.index");
-        } 
+        }
 
-        return $this->render("conferences/formulaire.html.twig",['form'=>$form->createView()]);
+        return $this->render("conferences/ajout.html.twig", ['form' => $form->createView()]);
     }
 }

@@ -27,6 +27,10 @@ class Conference
     #[ORM\Column]
     private ?\DateTimeImmutable $date = null;
 
+    #[ORM\ManyToOne(inversedBy: 'conferences')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Categorie $categorie = null;
+
     public function __construct(){
         $this->date = new DateTimeImmutable();
     }
@@ -79,6 +83,18 @@ class Conference
     public function setDate(\DateTimeImmutable $date): static
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getCategorie(): ?Categorie
+    {
+        return $this->categorie;
+    }
+
+    public function setCategorie(?Categorie $categorie): static
+    {
+        $this->categorie = $categorie;
 
         return $this;
     }
