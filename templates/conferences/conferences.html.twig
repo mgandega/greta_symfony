@@ -10,8 +10,11 @@
         {{ 'hello'|upper}} #}
     <div class="container">
         <div class="row">
+        <div class="col-sm-2"> 
+        <div> <p><a href="{{path("conference.add")}}">Ajouter une conférence</a></p></div>
+</div>
         {% for conference in conferences %}
-        <div class="col-sm-4">
+        <div class="col-sm-3">
         <div class="card border-secondary mb-3" style="max-width: 20rem;">
         <div class="card-header">{{ conference.titre}}</div>
         <div class="card-body">
@@ -21,7 +24,7 @@
         <a href="{{ url('conference.details',{'id':conference.id})}}">Details de la conférence</a>
         {% if conferences|length == 1 %}
         <a href="{{path('conference.edit', {'id':conference.id})}}">Modifier</a>
-        {% endif %}
+        {% endif %} 
         </div>
         </div>
         </div>

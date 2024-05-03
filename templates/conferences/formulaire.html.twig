@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Formulaire d'ajout{% endblock %}
+{% block body %}
+
+<form action="/conference/add" method="post">
+<input type="text" name="titre" placeholder="titre" /> <br><br>
+<textarea name="description"  cols="30" rows="5" placeholder="description"></textarea><br><br>
+<input type="text" name="lieu" placeholder="lieu" /> <br><br>
+<input type="submit" name="ajouter" /> <br><br>
+</form>
+{% endblock %}
