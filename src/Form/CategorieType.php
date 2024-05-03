@@ -15,7 +15,6 @@ class CategorieType extends AbstractType
         $builder
             ->add('nom')
             ->add('ajout',SubmitType::class)
-            
         ;
     }
 
