@@ -15,7 +15,7 @@ class ConferenceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('titre', null, ['attr' => ['placeholder' => 'le titre']])
+            ->add('titre', null)
             ->add('description')
             ->add('lieu')
             // ->add('date', null, [
@@ -28,13 +28,15 @@ class ConferenceType extends AbstractType
                 'multiple' => false,
                 'expanded' => true
             ])
-            ->add('save', SubmitType::class);
+            ->add('save', SubmitType::class,['label' => $options['button_label']])
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Conference::class,
+            'button_label'=>'Submit'
         ]);
     }
 }

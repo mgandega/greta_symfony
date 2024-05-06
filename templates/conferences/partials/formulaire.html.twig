@@ -1,3 +1,10 @@
+{# {{ bouton }}
+{% if bouton == 'ajouter' %}
+{% set bouton = 'Ajouter une conférence' %}
+{% elseif bouton == 'modifier' %}
+{% set bouton = 'Modifier une conférence' %}
+{% else %}
+{% endif %} #}
 <div class="container">
 {{ form_start(form) }}
 <div class="row">
@@ -15,6 +22,8 @@
 {{ form_row(form.lieu) }}
 </div>
 </div>
+{# <input type="submit" value="{{ bouton }}" /> #}
 {{ form_end(form)}}
+
 
 </div>

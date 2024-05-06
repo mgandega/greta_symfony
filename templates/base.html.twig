@@ -13,7 +13,13 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %} hello {% endblock %}
+        {% block body %}
+        {% for message in app.flashes('success') %}
+            <div class="flash-notice">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% endblock %}
         {% block contenu %}{% endblock %}
     </body>
 </html>

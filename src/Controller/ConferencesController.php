@@ -5,13 +5,15 @@ namespace App\Controller;
 use DateTimeImmutable;
 use App\Entity\Conference;
 use App\Form\ConferenceType;
+use App\Repository\CategorieRepository;
+use App\Repository\ConferenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class ConferencsController extends AbstractController
+class ConferencesController extends AbstractController
 {
 
     public $em;
@@ -53,23 +55,22 @@ class ConferencsController extends AbstractController
         //         $conferences[] = $conference;
         //     }
         // }
-
         $conference = $this->em->getRepository(Conference::class)->find($id);
 
-        $form = $this->createForm(ConferenceType::class, $conference);
+        $form = $this->createForm(ConferenceType::class, $conference,['button_label'=>'Modifier une conférence']);
         $form->handleRequest($request);
         if ($form->isSubmitted() and $form->isvalid()) {
-            $conference = $form->getData();
+            $conference = $form->get('titre')->getData();
             // on utilise seulement le flush() si on veut supprimer ou modifier
             // si on utilise persist() et flush(), on rajoutera une autre ligne dans la table
             $this->em->flush();
 
             return $this->redirectToRoute('conference.index');
         }
-        return $this->render("conferences/edit.html.twig", ['form' => $form->createView()]);
+        return $this->render("conferences/edit.html.twig", ['form' => $form->createView(),'bouton'=>'modifier']);
     }
     #[Route('/conference/supp/{id}', name: 'conference.supp')]
-    public function delete($id)
+    public function delete ( EntityManagerInterface $manager, $id)
     {
         $conference = $this->em->getRepository(Conference::class)->find($id);
         $this->em->remove($conference); // pour supprimer
@@ -94,7 +95,7 @@ class ConferencsController extends AbstractController
         // }
 
         $conference = new Conference();
-        $form = $this->createForm(ConferenceType::class, $conference);
+        $form = $this->createForm(ConferenceType::class, $conference,['button_label'=>'Ajouter une conférence']);
 
         // ici je lie les données du formulaire avec l'objet conference s'il y'en a
         // il hydrate les propriétés
@@ -103,10 +104,18 @@ class ConferencsController extends AbstractController
             $conference = $form->getData();
             $this->em->persist($conference);
             $this->em->flush();
-
+            $this->addFlash('success','conférence ajouté avec succès');
             return $this->redirectToRoute("conference.index");
         }
-
         return $this->render("conferences/ajout.html.twig", ['form' => $form->createView()]);
+    }
+
+    #[Route('/conferences/menu', name: 'menu')]
+    public function menu(ConferenceRepository $conference, CategorieRepository $categorie)
+    {
+        // $conferences = $this->em->getRepository(Conference::class)->findAll();
+        $conferences = $conference->findAll();
+        $categories = $categorie->findAll();
+        return $this->render("conferences/menu.html.twig", ['conferences' => $conferences, 'categories' => $categories]);
     }
 }
