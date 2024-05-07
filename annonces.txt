@@ -1,0 +1,14 @@
+- creer une entité annonce qui contient comme attributs : titre, description, lieu;
+- creer une entité categorie qui contient comme attributs : nom;
+- creer une entité image qui contient comme attributs : url, alt et file( non mappé);
+- créer une relation de type ManyToOne (du coté de l'annonce) entre Annonce et Categorie
+- créer une relation de type OneToOne (du coté de l'annonce) entre Annonce et Image
+- creer un template annonces.html.twig dans annonces qui contiendra toutes les annonces
+- creer un template annonce.html.twig dans annonces qui contiendra le detail d'annonce
+- la page sera divisée en 2 parties : la partie gauche contiendra les titres des annonces et des categories
+et la partie droite les annonces 
+- on fera de sorte que si on clique sur un titre d'annonce qu'on puisse récupéré l'annonce en question
+- on fera de sorte que si on clique sur un titre d'une catégorie qu'on puisse récupéré l'ensemble des annonces de cette catégorie 
+- on aura sur l'entête de toutes les pages un lien "accueil" qui affichera l'ensemble des annonces et un bouton contact (qui n'est pas encore utilisé)
+- on fera le crud sur les annonces (on fait de sorte que si on clique sur le details d'une annonces  qu'on puisse le supprimer ou le modifier), on ajoutera un bouton "ajouter annonce" pour ajouter une annonce avec un formulaire
+- on fera de même pour les categories .
