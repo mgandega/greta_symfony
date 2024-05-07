@@ -15,7 +15,7 @@ class AppExtension extends AbstractExtension
             // If your filter generates SAFE HTML, you should add a third
             // parameter: ['is_safe' => ['html']]
             // Reference: https://twig.symfony.com/doc/3.x/advanced.html#automatic-escaping
-            new TwigFilter('truncate', [$this, 'truncate'])
+            new TwigFilter('truncate', [$this, 'tronque'])
         ];
     }
 
@@ -26,7 +26,7 @@ class AppExtension extends AbstractExtension
         ];
     }
 
-    public function truncate($valeur){
+    public function tronque($valeur){
         if (strlen($valeur) >= 15){
             return substr($valeur, 0, 15).' ...';
         }else{

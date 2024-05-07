@@ -12,8 +12,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ConferencesController extends AbstractController
 {
@@ -32,6 +33,8 @@ class ConferencesController extends AbstractController
         // dd($request->attributes->get('id'));
 
         // $manager->getRepository(Conference::class)->findAll() permet de recuperer toutes les conférences
+        // $request->attributes->get('id') est égale à $id 
+        // on n'a pas mis de $id en parametre car on ne veut pas être obligé d'en mettre c'est le cas si on tape sur l'url /conferences du coup si on veut utiliser les deux routes (/conferences et /conferences/categorie/{id}) on prefere récupérer l'id par la methode $request->attributes->get('id')
         if ($request->attributes->get('id')) {
             $conferences = $this->em->getRepository(Conference::class)->findBy(['categorie' => $request->attributes->get('id')]);
         } else {
@@ -39,7 +42,8 @@ class ConferencesController extends AbstractController
         }
         // ici on retourne le template conferences.html.twig par rapport aux parametres passés en arguments
         $categories = $categorie->findAll();
-        return $this->render("conferences/conferences.html.twig", ['conferences' => $conferences, 'categories' => $categories]);
+        // return $this->render("conferences/conferences.html.twig", ['conferences' => $conferences, 'categories' => $categories]);
+        return $this->render("conferences/conferences.html.twig", compact('conferences', 'categories'));
     }
 
     #[Route('/conference/details/{id}', name: 'conference.details', requirements: ['id' => '\d+'])]
@@ -50,7 +54,7 @@ class ConferencesController extends AbstractController
         //         $conferences[] = $conference;
         //     }
         // }
-
+        // je recupere la conference par rapport à son id (l'id qu'on lui a donné)
         $conference = $this->em->getRepository(Conference::class)->find($id);
 
         return $this->render("conferences/conference.html.twig", ['conference' => $conference]);
@@ -92,39 +96,27 @@ class ConferencesController extends AbstractController
     #[Route('/conference/add', name: 'conference.add')]
     public function add(Request $request)
     {
-        // dd($_SERVER['DOCUMENT_ROOT'].'uploads/images');
-        $dossier_images = $_SERVER['DOCUMENT_ROOT'].'uploads/images';
-
-        // si on a cliqué sur le bouton submit (cela veut dire que le tableau n'est pas vide)
-        // si l'utilisateur à posté
-        //  if(!empty($_POST)){
-        //     $conference = new Conference();
-        //     $conference->setTitre($_POST['titre'])
-        //         ->setDescription($_POST['description'])
-        //         ->setLieu($_POST['lieu']);
-        //     $this->em->persist($conference); // enregistrer
-        //     $this->em->flush(); // valider l'enregistrement
-        // }else{
-        //     return $this->render("conferences/formulaire.html.twig");
-        // }
-
         $conference = new Conference();
         $form = $this->createForm(ConferenceType::class, $conference, ['button_label' => 'Ajouter une conférence']);
-
         // ici je lie les données du formulaire avec l'objet conference s'il y'en a
         // il hydrate les propriétés
         $form->handleRequest($request);
         if ($form->isSubmitted() and $form->isvalid()) {
-            // dd($form->get('file')->getData()->getClientOriginalName());
+            $dossier_images = $_SERVER['DOCUMENT_ROOT'] . "uploads/images";
+            // dd($request->server['DOCUMENT_ROOT']);
             // dd($form->getData()->getImage()->getFile()->getClientOriginalName());
-            $imagefile = $form->getData()->getImage()->getFile();
-            $imageName = $form->getData()->getImage()->getFile()->getClientOriginalName();
-            $imagefile->move($dossier_images, $imageName);
-            $fichier_bd = $dossier_images.'/'.$imageName;
-            $conference = $form->getData();
-            $conference->getImage()->setFile($imagefile);
-            $conference->getImage()->setUrl($fichier_bd);
-            $conference->getImage()->setAlt($imageName);
+
+            $filename = rand(1000, 9999) . time() . '_' . $form->getData()->getImage()->getFile()->getClientOriginalName();
+            // dd(get_class_methods($form->getData()->getImage()->getFile()));
+
+            $objectFile = $form->getData()->getImage()->getFile();
+            $bddFile = "uploads/images";
+            $objectFile->move($dossier_images, $filename);
+            $conference->getImage()->setUrl($bddFile . '/' . $filename);
+            $conference->getImage()->setAlt($filename);
+            $conference->getImage()->setFile($objectFile);
+
+
             $this->em->persist($conference);
             $this->em->flush();
 

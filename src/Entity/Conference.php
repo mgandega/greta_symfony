@@ -31,6 +31,9 @@ class Conference
     #[ORM\JoinColumn(nullable: true)]
     private ?Categorie $categorie = null;
 
+    #[ORM\OneToOne(inversedBy: 'conference', cascade: ['persist', 'remove'])]
+    private ?Image $image = null;
+
     public function __construct(){
         $this->date = new DateTimeImmutable();
     }
@@ -95,6 +98,18 @@ class Conference
     public function setCategorie(?Categorie $categorie): static
     {
         $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    public function getImage(): ?Image
+    {
+        return $this->image;
+    }
+
+    public function setImage(?Image $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }

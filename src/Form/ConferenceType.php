@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Form\ImageType;
 use App\Entity\Categorie;
 use App\Entity\Conference;
 use Symfony\Component\Form\AbstractType;
@@ -28,6 +29,7 @@ class ConferenceType extends AbstractType
                 'multiple' => false,
                 'expanded' => true
             ])
+            ->add('image',ImageType::class)
             ->add('save', SubmitType::class,['label' => $options['button_label']])
             ;
     }
