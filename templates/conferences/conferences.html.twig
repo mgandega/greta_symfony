@@ -18,9 +18,6 @@
         {% for conference in conferences %}
         <div class="col-sm-3" style="display:inline-block;">
         <div class="card border-secondary mb-3" style="max-width: 20rem;">
-        {% if conference.image  %}
-        <div class="card-header"><img src="uploads/images/{{conference.image.alt}}" alt="{{ asset(conference.image.alt) }}" style="width:100%; height:100px;"/></div>
-        {% endif %}
         <div class="card-header">{{ conference.titre|truncate }}</div>
         {# <div class="card-header">{{ trunc(conference.titre,'hello2') }}</div> #}
         <div class="card-body">
