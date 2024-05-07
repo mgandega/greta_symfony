@@ -1,0 +1,4 @@
+<h5>Affichage par conférence:</h5>
+    {{ render(controller(
+        'App\\Controller\\ConferencesController::menu', {max: 3}
+    )) }}

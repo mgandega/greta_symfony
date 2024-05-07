@@ -8,31 +8,34 @@
         {{ dump(prenom[0]['age']) }}
 
         {{ 'hello'|upper}} #}
-
     <div class="container">
         <div class="row">
-    {% for message in app.flashes('success') %}
-            <div class="btn btn-success">
-                {{ message }}
-            </div>
-        {% endfor %}
-        <div class="col-sm-2"> 
-            <div> <p><a href="{{path("conference.add")}}">Ajouter une conférence</a></p></div>
+        <div class="col-sm-4" style="height:800px"> 
+        <p><a href="{{ path('conference.add') }}">Ajouter une conférence</a></p>
+        {{ include("conferences/partials/menu.html.twig") }}
         </div>
+        <div class="col-sm-8">
         {% for conference in conferences %}
-        <div class="col-sm-3">
+        <div class="col-sm-3" style="display:inline-block;">
         <div class="card border-secondary mb-3" style="max-width: 20rem;">
-        {# <div class="card-header">{{ conference.titre|truncate}}</div> #}
-        <div class="card-header">{{ trunc(conference.titre)}}</div>
+        {% if conference.image  %}
+        <div class="card-header"><img src="uploads/images/{{conference.image.alt}}" alt="{{ asset(conference.image.alt) }}" style="width:100%; height:100px;"/></div>
+        {% endif %}
+        <div class="card-header">{{ conference.titre|truncate }}</div>
+        {# <div class="card-header">{{ trunc(conference.titre,'hello2') }}</div> #}
         <div class="card-body">
-        <p class="card-text">{{ conference.description }}</p> 
+        <p class="card-text">{{ conference.description }}</p>
         <h5 class="card-title">{{ conference.lieu }}</h5>
         <h5 class="card-title">{{ conference.date|date('d-m-Y') }}</h5>
         <a href="{{ url('conference.details',{'id':conference.id})}}">Details de la conférence</a>
+        {% if conferences|length == 1 %}
+        <a href="{{path('conference.edit', {'id':conference.id})}}">Modifier</a>
+        {% endif %} 
         </div>
         </div>
         </div>
         {% endfor %}
+     </div>
      </div>
 </div>
 {% endblock %}

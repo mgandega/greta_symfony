@@ -12,6 +12,9 @@
         <div class="row">
         
         <div class="col-sm-4">
+         {{ include("conferences/partials/menu.html.twig") }}
+        </div>
+        <div class="col-sm-8">
         <div class="card border-secondary mb-3" style="max-width: 20rem;">
         <div class="card-header">{{ conference.titre}}</div>
         <div class="card-body">
@@ -21,6 +24,8 @@
         {# <a href="{{path('conference.supp', {'id':conference.id})}}">Supprimer</a> #}
         <a href="{{path('conference.edit', {'id':conference.id})}}">Modifier</a>
         <a href="{{path('conference.supp', {'id':conference.id})}}">Supprimer</a>
+        <a href="{{path('conference.index')}}">Retour</a>
+        </div>
         </div>
         </div>
         </div>
