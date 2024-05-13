@@ -22,6 +22,23 @@
 {{ form_row(form.lieu) }}
 </div>
 </div>
+<div class="row">
+<div class="col-sm-4">
+{{ form_row(form.image) }}
+{% if form.image is empty %}
+<i>pas d'image</i>
+{% else %}
+{# {{ dump(form.image.file) }} #}
+{# {{ dump(chemin) }} #}
+<img src="{{ asset(conference.image.url) }}"/>
+{% endif %}
+</div>
+</div>
+<div class="row">
+<div class="col-sm-4">
+{{ form_row(form.categorie) }}
+</div>
+</div>
 {# <input type="submit" value="{{ bouton }}" /> #}
 {{ form_end(form)}}
 
