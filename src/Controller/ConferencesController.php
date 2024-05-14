@@ -151,4 +151,22 @@ class ConferencesController extends AbstractController
         $categories = $this->em->getRepository(Categorie::class)->findAll();
         return $this->render("conferences/menu.html.twig", ['conferences' => $conferences, 'categories' => $categories]);
     }
+    // #[Route('/conferences/titleLength', name: 'conference.titleLength')]
+    // public function prix()
+    // {
+    //     $conferences = $this->em->getRepository(Conference::class)->findByTitleLength(10);
+    //     return $this->render("conferences/query.html.twig", ['conferences' => $conferences]);
+    // }
+
+    #[Route('/teste', name: 'teste.length')]
+    public function teste(Request $request)
+    {
+        // dd($request->query->get('nb'));
+        $nb = $request->query->get('nb');
+        if ($nb) {
+            $conferences = $this->em->getRepository(Conference::class)->findByTitleLength($nb);
+            return $this->render("conferences/conferences.html.twig", ['conferences' => $conferences]);
+        }
+        return $this->render("conferences/query.html.twig");
+    }
 }
