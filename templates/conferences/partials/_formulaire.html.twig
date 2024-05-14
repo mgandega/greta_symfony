@@ -1,5 +1,5 @@
 <div class="container">
-{{ form_start(form) }}
+{{ form_start(form, {'attr':{'novalidate':'novalidate'}}) }}
 <div class="row">
 <div class="col-sm-4">
 {{ form_row(form.titre) }}
@@ -17,13 +17,13 @@
 </div>
 <div class="row">
 <div class="col-sm-4">
-{{ form_row(form.image) }}
-{% if form.image is empty %}
-<i>pas d'image</i>
+
+{% if conference is defined  %}
+<img src="{{ asset(conference.image.url) }}"/>
 {% else %}
+<i>pas d'image</i>
 {# {{ dump(form.image.file) }} #}
 {# {{ dump(chemin) }} #}
-<img src="{{ asset(conference.image.url) }}"/>
 {% endif %}
 </div>
 </div>
