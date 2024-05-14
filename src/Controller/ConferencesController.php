@@ -80,22 +80,23 @@ class ConferencesController extends AbstractController
             $dossier_images = $_SERVER['DOCUMENT_ROOT'] . "/uploads/images";
             // dd($request->server['DOCUMENT_ROOT']);
             // dd($form->getData()->getImage()->getFile()->getClientOriginalName());
-
-            $filename = rand(1000, 9999) . time() . '_' . $form->getData()->getImage()->getFile()->getClientOriginalName();
-            // dd(get_class_methods($form->getData()->getImage()->getFile()));
-            $bddFile = "uploads/images";
-            $file = $conference->getImage()->getFile();
-            $file->move($dossier_images, $filename);
-            $conference->getImage()->setUrl($bddFile . '/' . $filename);
-            $conference->getImage()->setAlt($conference->getImage()->getFile()->getClientOriginalName());
-            $conference->getImage()->setFile($conference->getImage()->getFile());
-            $chemin = $bddFile . '/' . $filename;
+            if ($conference->getImage()->getFile() instanceof UploadedFile) {
+                $filename = rand(1000, 9999) . time() . '_' . $form->getData()->getImage()->getFile()->getClientOriginalName();
+                // dd(get_class_methods($form->getData()->getImage()->getFile()));
+                $bddFile = "uploads/images";
+                $file = $conference->getImage()->getFile();
+                $file->move($dossier_images, $filename);
+                $conference->getImage()->setUrl($bddFile . '/' . $filename);
+                $conference->getImage()->setAlt($conference->getImage()->getFile()->getClientOriginalName());
+                $conference->getImage()->setFile($conference->getImage()->getFile());
+                $chemin = $bddFile . '/' . $filename;
+            }
             // on utilise seulement le flush() si on veut supprimer ou modifier
             // si on utilise persist() et flush(), on rajoutera une autre ligne dans la table
             $this->em->flush();
             return $this->redirectToRoute('conference.index');
         }
-        return $this->render("conferences/edit.html.twig", ['conference'=>$conference,'form' => $form->createView(), 'bouton' => 'modifier']);
+        return $this->render("conferences/edit.html.twig", ['conference' => $conference, 'form' => $form->createView(), 'bouton' => 'modifier']);
     }
     #[Route('/conference/supp/{id}', name: 'conference.supp')]
     public function delete($id)
