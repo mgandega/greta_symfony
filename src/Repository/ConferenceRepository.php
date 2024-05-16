@@ -27,7 +27,7 @@ class ConferenceRepository extends ServiceEntityRepository
        public function findByTitleLength($value): array
        {
            return $this->createQueryBuilder('c')
-               ->andWhere('Length(c.titre) <= :val')
+               ->andWhere('c.date <= :val')
                ->setParameter('val', $value)
                ->orderBy('c.id', 'ASC')
                ->setMaxResults(10)

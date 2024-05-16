@@ -115,7 +115,7 @@ class ConferencesController extends AbstractController
         // ici je lie les données du formulaire avec l'objet conference s'il y'en a
         // il hydrate les propriétés
         $form->handleRequest($request);
-        if ($form->isSubmitted() and $form->isvalid()) {
+        if ($form->isSubmitted() and $form->isValid()) {
             $dossier_images = $_SERVER['DOCUMENT_ROOT'] . "uploads/images";
             // dd($request->server['DOCUMENT_ROOT']);
             // dd($form->getData()->getImage()->getFile()->getClientOriginalName());
@@ -158,11 +158,22 @@ class ConferencesController extends AbstractController
     //     return $this->render("conferences/query.html.twig", ['conferences' => $conferences]);
     // }
 
+    // #[Route('/teste', name: 'teste.length')]
+    // public function teste(Request $request)
+    // {
+    //     // dd($request->query->get('nb'));
+    //     $nb = $request->query->get('nb');
+    //     if ($nb) {
+    //         $conferences = $this->em->getRepository(Conference::class)->findByTitleLength($nb);
+    //         return $this->render("conferences/conferences.html.twig", ['conferences' => $conferences]);
+    //     }
+    //     return $this->render("conferences/query.html.twig");
+    // }
     #[Route('/teste', name: 'teste.length')]
     public function teste(Request $request)
     {
         // dd($request->query->get('nb'));
-        $nb = $request->query->get('nb');
+        $nb = $request->request->get('nb');
         if ($nb) {
             $conferences = $this->em->getRepository(Conference::class)->findByTitleLength($nb);
             return $this->render("conferences/conferences.html.twig", ['conferences' => $conferences]);
