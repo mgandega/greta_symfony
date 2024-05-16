@@ -20,6 +20,7 @@ class ConferencesController extends AbstractController
 {
 
     public $em;
+    public static $compteur;
     public function __construct(EntityManagerInterface $manager)
     {
         $this->em = $manager;
@@ -179,5 +180,18 @@ class ConferencesController extends AbstractController
             return $this->render("conferences/conferences.html.twig", ['conferences' => $conferences]);
         }
         return $this->render("conferences/query.html.twig");
+    }
+    #[Route('/favorite:{id}', name: 'favorite')]
+    public function favorite($id, Conference $conference)
+    {
+        if ($conference->getFavorite() > 0) {
+           $compteur = $conference->getFavorite() + 1;
+            $conference->setFavorite($compteur);
+        } else {
+            $conference->setFavorite(1);
+        }
+        $this->em->flush();
+
+        return $this->redirectToRoute('conference.details', ['id' => $id]);
     }
 }

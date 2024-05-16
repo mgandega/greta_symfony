@@ -49,6 +49,9 @@ class Conference
     #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'conference')]
     private Collection $commentaires;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $favorite = null;
+
     public function __construct(){
         $this->date = new DateTimeImmutable();
         $this->commentaires = new ArrayCollection();
@@ -156,6 +159,18 @@ class Conference
                 $commentaire->setConference(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFavorite(): ?int
+    {
+        return $this->favorite;
+    }
+
+    public function setFavorite(?int $favorite): static
+    {
+        $this->favorite = $favorite;
 
         return $this;
     }

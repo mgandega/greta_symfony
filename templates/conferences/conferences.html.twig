@@ -34,13 +34,13 @@
         <a href="{{path('conference.edit', {'id':conference.id})}}">Modifier</a>
         {% endif %} 
         </div>
-        {% if conference.commentaires %}
-        {{ conference.commentaires|length~' commentaire(s)'}}
+      {% if conference.commentaires is not null %}
+        {{ conference.commentaires|length~' commentaires'}}
         {% endif %}
         </div>
         </div>
         {% endfor %}
-     </div>
+     </div>       
      </div>
 </div>
 {% endblock %}

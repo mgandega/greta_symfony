@@ -30,8 +30,19 @@
         </form>
         {# <a href="?idConference={{ conference.id }}" >Commenter </a> #}
         <a href="{{path('conference.index')}}">Retour</a>
+{% if app.request.query.get('like') == 1 %}
+<a href="{{ path('favorite',{'id':conference.id})~'?like=0'}}">unlike</a>
+{% else %}
+<a href="{{ path('favorite',{'id':conference.id})~'?like=1'}}">like</a>
+{% endif %}
         </div>
+         {% if conference.commentaires is not null %}
+        {{ conference.commentaires|length~' commentaires'}}
+        {% endif %}
+        {{ conference.favorite ~' likes'}}
+
         </div>
+
 {# {{ dump(app.request.query.get('idConference')) }} #}
 {% if app.request.query.get('idConference') is not null %}
     {{ include('conferences/partials/_commentaire.html.twig') }}
@@ -40,10 +51,11 @@
         {% for commentaire in conference.commentaires %}
             <i>auteur: {{commentaire.pseudo }} </i><br>
             <i>commentaire: {{commentaire.content }} </i><br>
-            <i>auteur: {{commentaire.publishedAt|date }} </i><br><br>
+            <i>auteur: {{commentaire.publishedAt|date('d-m-Y') }} </i><br><br>
         {% endfor %}
         {% endif %}
         </div>
+
         </div>
      </div>
 </div>
