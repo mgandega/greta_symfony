@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use DateTime;
+use Faker\Factory;
 use App\Entity\Image;
 use DateTimeImmutable;
 use App\Entity\Categorie;
@@ -10,26 +11,35 @@ use App\Entity\Conference;
 use App\Entity\Commentaire;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class AppFixtures extends Fixture
 {
+
     public function load(ObjectManager $manager): void
     {
+        $faker = Factory::create();
+        $faker->addProvider(new \Xvladqt\Faker\LoremFlickrProvider($faker));
         // l'entité: categorie
         // l'entité: image
         // l'entité: conference
         // l'entité: commentaire
 
+        $categories = ["conference sur Symfony", "conference sur Drupal", "conference sur Laravel"];
         for ($i = 1; $i <= 10; $i++) {
             $categorie = new Categorie();
-            $categorie->setNom('symfony' . $i);
+            $categorie->setNom($faker->randomElement($categories));
             $manager->persist($categorie);
             $this->addReference('categorie' . $i, $categorie);
         }
+
         for ($i = 1; $i <= 10; $i++) {
             $image = new Image();
-            $fichier = "https://blog.1001salles.com/wp-content/uploads/2015/04/preparer-sa-salle.jpg";
+            // $fichier = "https://blog.1001salles.com/wp-content/uploads/2015/04/preparer-sa-salle.jpg";
+            // $fichier = $faker->image($dir = '/tmp', $width = 640, $height = 480);
+            // $fichier = $faker->image($width=640, $height=480, ['cats']);
+            $fichier = $faker->image(null, $width = 640, $height=480, ['cats'], true, true, true); 
             $infos = pathinfo($fichier);
             $nomFichier = $infos['basename'];
             $repertoire = 'public/uploads/images/' . $nomFichier;
@@ -46,23 +56,23 @@ class AppFixtures extends Fixture
 
         for ($i = 1; $i <= 10; $i++) {
             $conference = new Conference();
-            $conference->setTitre('hello')
-                ->setDescription('description')
-                ->setLieu('paris')
+            $conference->setTitre($faker->name)
+                ->setDescription($faker->text)
+                ->setLieu($faker->city)
                 ->setDate(new DateTimeImmutable())
-                ->setCategorie($this->getReference('categorie' . $i))
+                ->setCategorie($this->getReference('categorie'.$i))
                 ->setImage($this->getReference('image' . $i))
                 ->setFavorite(0);
             $manager->persist($conference);
             $this->addReference('conference' . $i, $conference);
         }
 
-        for($i=1; $i<=10; $i++){
+        for ($i = 1; $i <= 10; $i++) {
             $commentaire = new Commentaire;
-            $commentaire->setPseudo('martin')
-            ->setContent('salut tout le monde')
-            ->setPublishedAt(new DateTimeImmutable())
-            ->setConference($this->getReference('conference' . $i));
+            $commentaire->setPseudo($faker->title)
+                ->setContent($faker->text)
+                ->setPublishedAt(new DateTimeImmutable())
+                ->setConference($this->getReference('conference' . $i));
             $manager->persist($commentaire);
         }
 

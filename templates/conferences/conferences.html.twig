@@ -21,7 +21,7 @@
         {% if conference.image is empty %} 
         <div class="card-header"></div>
         {% else %}
-        <div class="card-header"><img src="{{ conference.image.url }}" alt="{{ conference.image.alt }}" style="width:100%"  /></div>
+        <div class="card-header"><img src="{{ asset(conference.image.url) }}" alt="{{ conference.image.alt }}" style="width:100%"  /></div>
         {% endif %}
         <div class="card-header">{{ conference.titre|truncate }}</div>
         {# <div class="card-header">{{ trunc(conference.titre,'hello2') }}</div> #}
