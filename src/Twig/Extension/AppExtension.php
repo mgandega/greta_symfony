@@ -15,7 +15,8 @@ class AppExtension extends AbstractExtension
             // If your filter generates SAFE HTML, you should add a third
             // parameter: ['is_safe' => ['html']]
             // Reference: https://twig.symfony.com/doc/3.x/advanced.html#automatic-escaping
-            new TwigFilter('truncate', [$this, 'tronque'])
+            new TwigFilter('truncate', [$this, 'tronque']),
+            new TwigFilter('unique', [$this, 'uniqueFilter']),
         ];
     }
 
@@ -40,4 +41,7 @@ class AppExtension extends AbstractExtension
             return $valeur;
         }
     }
+    public function uniqueFilter(array $array): array {
+        return array_unique($array);
+        }
 }

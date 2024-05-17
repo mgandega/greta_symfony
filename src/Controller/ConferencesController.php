@@ -186,7 +186,7 @@ class ConferencesController extends AbstractController
     {
         if ($conference->getFavorite() > 0) {
            $compteur = $conference->getFavorite() + 1;
-            $conference->setFavorite($compteur);
+            $conference->setFavorite(0);
         } else {
             $conference->setFavorite(1);
         }

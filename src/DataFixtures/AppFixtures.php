@@ -14,7 +14,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class AppFixtures extends Fixture
+class AppFixtures extends Fixture 
 {
 
     public function load(ObjectManager $manager): void

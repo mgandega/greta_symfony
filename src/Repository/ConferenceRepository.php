@@ -21,20 +21,36 @@ class ConferenceRepository extends ServiceEntityRepository
         parent::__construct($registry, Conference::class);
     }
 
-       /**
-        * @return Conference[] Returns an array of Conference objects
-        */
-       public function findByTitleLength($value): array
-       {
-           return $this->createQueryBuilder('c')
-               ->andWhere('c.date <= :val')
-               ->setParameter('val', $value)
-               ->orderBy('c.id', 'ASC')
-               ->setMaxResults(10)
-               ->getQuery()
-               ->getResult()
-           ;
-       }
+    /**
+     * @return Conference[] Returns an array of Conference objects
+     */
+    public function findByTitleLength($value): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.date <= :val')
+            ->setParameter('val', $value)
+            ->orderBy('c.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+    /**
+     * @return Conference[] Returns an array of Conference objects
+     */
+    // public function findUnique(): array
+    // {
+    //     return $this->createQueryBuilder('c')
+    //         ->andWhere('c.nom <= :val')
+    //         ->setParameter('val', $value)
+    //         ->orderBy('c.id', 'ASC')
+    //         ->setMaxResults(10)
+    //         ->getQuery()
+    //         ->getResult();
+    //     // $categories = $this->getRepository(Categorie::class)->createQueryBuilder('c')
+    //     //     ->select('DISTINCT c.name')
+    //     //     ->getQuery()
+    //     //     ->getResult();
+    // }
 
     //    public function findOneBySomeField($value): ?Conference
     //    {
