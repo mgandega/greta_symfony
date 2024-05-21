@@ -2,35 +2,35 @@
 
 namespace App;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\MailerInterface;
 use Twig\Environment;
 
-class SendMailers extends AbstractController
+class SendMailers
 {
     public function __construct(
         public MailerInterface $mailer, 
         public Environment $twig,
-        // public ContainerInterface $container
         )
     {
     }
 
-    public function sendMail()
+    public function sendMail($pseudo,$email,$message)
     {
-        $message = 'Sending emails is fun again!';
-        $name = 'John Doe';
 
         // Génération du contenu HTML avec Twig
+        $htmlContent = $this->twig->render('contact\mailer.html.twig', [
+            'message' => $message,
+            'name' => $pseudo,
+        ]);
+
         $email = (new Email())
-            ->from('hello@example.com')
-            ->to('you@example.com')
+            ->from($email)
+            ->to('admin@monsite.com')
             ->subject('Time for Symfony Mailer!')
             ->text($message)
-            ->html('hello');
+            ->html($htmlContent);
 
-       $this->mailer->send($email);
+        $this->mailer->send($email);
     }
 }

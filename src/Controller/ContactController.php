@@ -19,12 +19,11 @@ class ContactController extends AbstractController
         $form = $this->createForm(ContactType::class, $contact);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            // $pseudo = $form->get('pseudo')->getData();
-            // $email = $form->get('email')->getData();
-            // $message = $form->get('message')->getData();
-            // $mailer->send($pseudo, $email, $message);
-            $mailer->sendMail();
-            // return $this->redirectToRoute('app_contact');
+            $pseudo = $form->get('pseudo')->getData();
+            $email = $form->get('email')->getData();
+            $message = $form->get('message')->getData();
+            $mailer->sendMail($pseudo, $email, $message);
+            return $this->redirectToRoute('app_contact');
         }
 
         return $this->render('contact/index.html.twig', [
