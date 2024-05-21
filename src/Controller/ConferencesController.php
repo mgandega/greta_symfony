@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use App\Entity\Categorie;
 use App\Entity\Conference;
 use App\Form\ConferenceType;
+use Psr\Log\LoggerInterface;
 use App\Repository\CategorieRepository;
 use App\Repository\ConferenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,6 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ConferencesController extends AbstractController
 {
@@ -30,9 +32,11 @@ class ConferencesController extends AbstractController
     #[Route('/conferences', name: 'conference.index')]
     // #[Route('/conferences/categorie/{nom}', name: 'conference.categorie')]
     #[Route('/conferences/categorie/{id}', name: 'conference.categorie')]
-    public function index(Request $request, CategorieRepository $categorie): Response
+    public function index(LoggerInterface $logger, Request $request, CategorieRepository $categorie): Response
     {
-        // dd($request->attributes->get('id'));
+
+        // dd(get_class_methods($logger));        // dd($request->attributes->get('id'));
+        // $logger->info('juste une information');        // dd($request->attributes->get('id'));
 
         // $manager->getRepository(Conference::class)->findAll() permet de recuperer toutes les conférences
         // $request->attributes->get('id') est égale à $id 
@@ -41,7 +45,7 @@ class ConferencesController extends AbstractController
         if ($request->attributes->get('id')) {
             // $conferences = $this->em->getRepository(Conference::class)->findBy(['categorie' => $request->attributes->get('nom')]);
             // $conferences = $this->em->getRepository(Conference::class)->conferencesParCategorie($request->attributes->get('nom'));
-            $conferences = $this->em->getRepository(Conference::class)->findBy(['categorie'=>$request->attributes->get('id')]);
+            $conferences = $this->em->getRepository(Conference::class)->findBy(['categorie' => $request->attributes->get('id')]);
         } else {
             $conferences = $this->em->getRepository(Conference::class)->findAll();
         }
@@ -115,7 +119,7 @@ class ConferencesController extends AbstractController
     }
 
     #[Route('/conference/add', name: 'conference.add')]
-    public function add(Request $request)
+    public function add(Request $request, ValidatorInterface $validator)
     {
         $conference = new Conference();
         $form = $this->createForm(ConferenceType::class, $conference, ['button_label' => 'Ajouter une conférence']);
@@ -123,6 +127,7 @@ class ConferencesController extends AbstractController
         // il hydrate les propriétés
         $form->handleRequest($request);
         if ($form->isSubmitted() and $form->isValid()) {
+
             $dossier_images = $_SERVER['DOCUMENT_ROOT'] . "uploads/images";
             // dd($request->server['DOCUMENT_ROOT']);
             // dd($form->getData()->getImage()->getFile()->getClientOriginalName());
@@ -191,7 +196,7 @@ class ConferencesController extends AbstractController
     public function favorite($id, Conference $conference)
     {
         if ($conference->getFavorite() > 0) {
-           $compteur = $conference->getFavorite() + 1;
+            $compteur = $conference->getFavorite() + 1;
             $conference->setFavorite(0);
         } else {
             $conference->setFavorite(1);
@@ -200,4 +205,5 @@ class ConferencesController extends AbstractController
 
         return $this->redirectToRoute('conference.details', ['id' => $id]);
     }
+
 }
