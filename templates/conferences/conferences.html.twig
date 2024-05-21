@@ -12,13 +12,13 @@
         <div class="row">
         <div class="col-sm-4" style="height:800px"> 
         <p><a href="{{ path('conference.add') }}">Ajouter une conférence</a></p>
-        {# {{ include("conferences/partials/_menu.html.twig") }} #}
+        {{ include("conferences/partials/_menu.html.twig") }}
 
-        <ul>
+        {# <ul>
         {% for categorie in categories %}
        <li> <a href="{{ path('conference.categorie',{'nom':categorie['nom']}) }}">{{ categorie['nom'] }}</a></li>
         {% endfor %}
-        </ul>
+        </ul> #}
         </div>
         <div class="col-sm-8">
         {% for conference in conferences %}

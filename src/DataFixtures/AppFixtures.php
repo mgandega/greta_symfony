@@ -25,17 +25,18 @@ class AppFixtures extends Fixture
         // l'entité: commentaire
 
         $categories = ["conference sur Symfony", "conference sur Drupal", "conference sur Laravel"];
-        for ($i = 1; $i <= 10; $i++) {
+        $cat = [];
+        for ($i = 0; $i <3 ; $i++) {
             $categorie = new Categorie();
-            $categorie->setNom($faker->randomElement($categories));
+            $categorie->setNom($categories[$i]);
             $manager->persist($categorie);
-            $this->addReference('categorie' . $i, $categorie);
+            $cat[] = $categorie;
         }
 
         for ($i = 1; $i <= 10; $i++) {
             $image = new Image();
-            // $fichier = "https://blog.1001salles.com/wp-content/uploads/2015/04/preparer-sa-salle.jpg";
-            $fichier = $faker->image($dir = '/tmp', $width = 640, $height = 480);
+            $fichier = "https://blog.1001salles.com/wp-content/uploads/2015/04/preparer-sa-salle.jpg";
+            // $fichier = $faker->image($dir = '/tmp', $width = 640, $height = 480);
             $infos = pathinfo($fichier);
             $nomFichier = $infos['basename'];
             $repertoire = 'public/uploads/images/' . $nomFichier;
@@ -49,20 +50,18 @@ class AppFixtures extends Fixture
             $manager->persist($image);
             $this->addReference('image' . $i, $image);
         }
-
         for ($i = 1; $i <= 10; $i++) {
             $conference = new Conference();
             $conference->setTitre($faker->name)
                 ->setDescription($faker->text)
                 ->setLieu($faker->city)
                 ->setDate(new DateTimeImmutable())
-                ->setCategorie($this->getReference('categorie'.$i))
+                ->setCategorie($faker->randomElement($cat))
                 ->setImage($this->getReference('image' . $i))
                 ->setFavorite(0);
             $manager->persist($conference);
             $this->addReference('conference' . $i, $conference);
         }
-
         for ($i = 1; $i <= 10; $i++) {
             $commentaire = new Commentaire;
             $commentaire->setPseudo($faker->title)
@@ -71,7 +70,6 @@ class AppFixtures extends Fixture
                 ->setConference($this->getReference('conference' . $i));
             $manager->persist($commentaire);
         }
-
         $manager->flush();
     }
 }
