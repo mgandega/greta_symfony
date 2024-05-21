@@ -3,5 +3,5 @@
 {% endfor %}
 <h5>Affichage par catégorie:</h5>
 {% for categorie in categories %}
-<div><a href="{{ path('conference.categorie',{'id':categorie.id})}}">{{ categorie.nom }}</a></div>
+<div><a href="{{ path('conference.categorie',{'nom':categorie.nom})}}">{{ categorie.nom }}</a></div>
 {% endfor %}

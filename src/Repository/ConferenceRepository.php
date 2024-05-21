@@ -51,6 +51,23 @@ class ConferenceRepository extends ServiceEntityRepository
     //     //     ->getQuery()
     //     //     ->getResult();
     // }
+    /**
+     * @return Conference[] Returns an array of Conference objects
+     */
+    public function conferencesParCategorie($value): array
+    {
+        return $this->createQueryBuilder('conf')
+            ->innerJoin('conf.categorie', 'c')
+            ->andWhere('c.nom = :val')
+            ->setParameter('val', $value)
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+        // $categories = $this->getRepository(Categorie::class)->createQueryBuilder('c')
+        //     ->select('DISTINCT c.name')
+        //     ->getQuery()
+        //     ->getResult();
+    }
 
     //    public function findOneBySomeField($value): ?Conference
     //    {

@@ -35,6 +35,17 @@ class CategorieRepository extends ServiceEntityRepository
     //            ->getResult()
     //        ;
     //    }
+    /**
+     * @return Categorie[] Returns an array of Categorie objects
+     */
+    public function categorieUnique(): array
+    {
+        return $this->createQueryBuilder('cat')
+            ->select('DISTINCT cat.nom')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
 
     //    public function findOneBySomeField($value): ?Categorie
     //    {

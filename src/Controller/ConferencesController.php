@@ -28,7 +28,7 @@ class ConferencesController extends AbstractController
 
     // le nom d'une route doit être unique
     #[Route('/conferences', name: 'conference.index')]
-    #[Route('/conferences/categorie/{id}', name: 'conference.categorie')]
+    #[Route('/conferences/categorie/{nom}', name: 'conference.categorie')]
     public function index(Request $request, CategorieRepository $categorie): Response
     {
         // dd($request->attributes->get('id'));
@@ -36,13 +36,16 @@ class ConferencesController extends AbstractController
         // $manager->getRepository(Conference::class)->findAll() permet de recuperer toutes les conférences
         // $request->attributes->get('id') est égale à $id 
         // on n'a pas mis de $id en parametre car on ne veut pas être obligé d'en mettre c'est le cas si on tape sur l'url /conferences du coup si on veut utiliser les deux routes (/conferences et /conferences/categorie/{id}) on prefere récupérer l'id par la methode $request->attributes->get('id')
-        if ($request->attributes->get('id')) {
-            $conferences = $this->em->getRepository(Conference::class)->findBy(['categorie' => $request->attributes->get('id')]);
+        if ($request->attributes->get('nom')) {
+            // $conferences = $this->em->getRepository(Conference::class)->findBy(['categorie' => $request->attributes->get('nom')]);
+            $conferences = $this->em->getRepository(Conference::class)->conferencesParCategorie($request->attributes->get('nom'));
         } else {
             $conferences = $this->em->getRepository(Conference::class)->findAll();
         }
         // ici on retourne le template conferences.html.twig par rapport aux parametres passés en arguments
-        $categories = $categorie->findAll();
+        // $categories = $categorie->findAll();
+        // $categories = $this->em->getRepository(Categorie::class)->findAll();
+        $categories = $this->em->getRepository(Categorie::class)->categorieUnique();
         // return $this->render("conferences/conferences.html.twig", ['conferences' => $conferences, 'categories' => $categories]);
         return $this->render("conferences/conferences.html.twig", compact('conferences', 'categories'));
     }

@@ -11,16 +11,14 @@ use App\Entity\Conference;
 use App\Entity\Commentaire;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class AppFixtures extends Fixture 
+class AppFixtures extends Fixture
 {
 
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create();
-        $faker->addProvider(new \Xvladqt\Faker\LoremFlickrProvider($faker));
         // l'entité: categorie
         // l'entité: image
         // l'entité: conference
@@ -37,9 +35,7 @@ class AppFixtures extends Fixture
         for ($i = 1; $i <= 10; $i++) {
             $image = new Image();
             // $fichier = "https://blog.1001salles.com/wp-content/uploads/2015/04/preparer-sa-salle.jpg";
-            // $fichier = $faker->image($dir = '/tmp', $width = 640, $height = 480);
-            // $fichier = $faker->image($width=640, $height=480, ['cats']);
-            $fichier = $faker->image(null, $width = 640, $height=480, ['cats'], true, true, true); 
+            $fichier = $faker->image($dir = '/tmp', $width = 640, $height = 480);
             $infos = pathinfo($fichier);
             $nomFichier = $infos['basename'];
             $repertoire = 'public/uploads/images/' . $nomFichier;
