@@ -54,6 +54,10 @@ class ConferenceRepository extends ServiceEntityRepository
     /**
      * @return Conference[] Returns an array of Conference objects
      */
+
+    /**
+     * @return Conference[] Returns an array of Conference objects
+     */
     public function conferencesParCategorie($value): array
     {
         return $this->createQueryBuilder('conf')
@@ -63,10 +67,7 @@ class ConferenceRepository extends ServiceEntityRepository
             ->setMaxResults(10)
             ->getQuery()
             ->getResult();
-        // $categories = $this->getRepository(Categorie::class)->createQueryBuilder('c')
-        //     ->select('DISTINCT c.name')
-        //     ->getQuery()
-        //     ->getResult();
+
     }
 
     //    public function findOneBySomeField($value): ?Conference

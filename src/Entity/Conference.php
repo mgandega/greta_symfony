@@ -8,8 +8,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
 use Symfony\Component\Validator\Constraints as Assert;
+
+#[Assert\EnableAutoMapping]
 #[ORM\Entity(repositoryClass: ConferenceRepository::class)]
 class Conference
 {
@@ -18,13 +19,13 @@ class Conference
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
     #[Assert\Length(
         min: 5,
         max: 50,
-        minMessage: 'Your first name must be at least {{ limit }} characters long',
-        maxMessage: 'Your first name cannot be longer than {{ limit }} characters',
+        minMessage: 'le titre doit être au minimum de {{ limit }} caractères',
+        maxMessage: 'le titre doit être au maximum de {{ limit }} caractères ',
     )]
+    #[ORM\Column(length: 255)]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -36,10 +37,12 @@ class Conference
     #[ORM\Column]
     private ?\DateTimeImmutable $date = null;
 
+    #[Assert\NotBlank()]
     #[ORM\ManyToOne(inversedBy: 'conferences')]
     #[ORM\JoinColumn(nullable: true)]
     private ?Categorie $categorie = null;
 
+    #[Assert\Valid()]
     #[ORM\OneToOne(inversedBy: 'conference', cascade: ['persist', 'remove'])]
     private ?Image $image = null;
 
@@ -52,7 +55,8 @@ class Conference
     #[ORM\Column(nullable: true)]
     private ?int $favorite = null;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->date = new DateTimeImmutable();
         $this->commentaires = new ArrayCollection();
     }

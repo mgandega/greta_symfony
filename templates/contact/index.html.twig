@@ -5,7 +5,36 @@
 {% block body %}
 <div class="container">
 {{ form_start(form,{'attr':{'novalidate':'novalidate'}})}}
-{{ form(form) }}
+{# {{ form(form) }} #}
+
+    {% for error in form.vars.errors %}
+        <div class="error">{{ error.message }}</div>
+    {% endfor %}
+
+    {{ form_row(form.titre) }}
+    {% for error in form.titre.vars.errors %}
+        <div class="error">{{ error.message }}</div>
+    {% endfor %}
+
+    {{ form_row(form.description) }}
+    {% for error in form.description.vars.errors %}
+        <div class="error">{{ error.message }}</div>
+    {% endfor %}
+
+    {{ form_row(form.lieu) }}
+    {% for error in form.lieu.vars.errors %}
+        <div class="error">{{ error.message }}</div>
+    {% endfor %}
+
+    {{ form_row(form.categorie) }}
+    {% for error in form.categorie.vars.errors %}
+        <div class="error">{{ error.message }}</div>
+    {% endfor %}
+
+    {{ form_row(form.image) }}
+    {% for error in form.image.vars.errors %}
+        <div class="error">{{ error.message }}</div>
+    {% endfor %}
 {{ form_end(form)}}
 </div>
 {% endblock %}

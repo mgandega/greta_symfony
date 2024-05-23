@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\AntiSpam;
 use DateTimeImmutable;
 use App\Entity\Categorie;
 use App\Entity\Conference;
@@ -10,6 +11,7 @@ use Psr\Log\LoggerInterface;
 use App\Repository\CategorieRepository;
 use App\Repository\ConferenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -119,15 +121,21 @@ class ConferencesController extends AbstractController
     }
 
     #[Route('/conference/add', name: 'conference.add')]
-    public function add(Request $request, ValidatorInterface $validator)
+    public function add(Request $request, ValidatorInterface $validator, AntiSpam $antiSpam)
     {
+
         $conference = new Conference();
         $form = $this->createForm(ConferenceType::class, $conference, ['button_label' => 'Ajouter une conférence']);
         // ici je lie les données du formulaire avec l'objet conference s'il y'en a
         // il hydrate les propriétés
         $form->handleRequest($request);
-        if ($form->isSubmitted() and $form->isValid()) {
 
+        if ($form->isSubmitted() and $form->isValid()) {
+// dd($antiSpam->alert($form->get('description')->getData()));
+               if($antiSpam->alert($form->get('description')->getData())){
+                throw new Exception('le message est considéré comme un spam');
+               }
+            
             $dossier_images = $_SERVER['DOCUMENT_ROOT'] . "uploads/images";
             // dd($request->server['DOCUMENT_ROOT']);
             // dd($form->getData()->getImage()->getFile()->getClientOriginalName());
@@ -205,5 +213,4 @@ class ConferencesController extends AbstractController
 
         return $this->redirectToRoute('conference.details', ['id' => $id]);
     }
-
 }

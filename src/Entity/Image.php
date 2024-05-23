@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ImageRepository;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 // use Symfony\Component\HttpFoundation\File\File;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
@@ -24,6 +25,12 @@ class Image
     #[ORM\OneToOne(mappedBy: 'image', cascade: ['persist', 'remove'])]
     private ?Conference $conference = null;
 
+    #[Assert\File(
+        maxSize: '1024k',
+        extensions: ['jpeg','jpg','png','webp'],
+        extensionsMessage: 'Veuillez entrer en pdf valide',
+    )]
+    #[Assert\NotBlank()]
     public $file;
 
     public function getId(): ?int
