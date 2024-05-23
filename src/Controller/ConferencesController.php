@@ -30,13 +30,13 @@ class ConferencesController extends AbstractController
         $this->em = $manager;
     }
 
+
     // le nom d'une route doit être unique
     // #[Route('/conferences/categorie/{nom}', name: 'conference.categorie')]
     #[Route('/conferences', name: 'conference.index')]
     #[Route('/conferences/categorie/{id}', name: 'conference.categorie')]
     public function index(LoggerInterface $logger, Request $request, CategorieRepository $categorie): Response
     {
-
         // dd(get_class_methods($logger));        // dd($request->attributes->get('id'));
         // $logger->info('juste une information');        // dd($request->attributes->get('id'));
 
@@ -51,7 +51,7 @@ class ConferencesController extends AbstractController
         } else {
             $conferences = $this->em->getRepository(Conference::class)->findAll();
         }
-       
+
         // dd($lastConferences);
         // ici on retourne le template conferences.html.twig par rapport aux parametres passés en arguments
         // $categories = $categorie->findAll();
@@ -134,10 +134,10 @@ class ConferencesController extends AbstractController
 
         if ($form->isSubmitted() and $form->isValid()) {
 
-               if($antiSpam->alert($form->get('description')->getData())){
+            if ($antiSpam->alert($form->get('description')->getData())) {
                 throw new Exception('le message est considéré comme un spam');
-               }
-            
+            }
+
             $dossier_images = $_SERVER['DOCUMENT_ROOT'] . "uploads/images";
             // dd($request->server['DOCUMENT_ROOT']);
             // dd($form->getData()->getImage()->getFile()->getClientOriginalName());
@@ -168,7 +168,7 @@ class ConferencesController extends AbstractController
         $conferences = $this->em->getRepository(Conference::class)->findAll(); // $pdo->query("select * from conference");
         $lastConferences = $this->em->getRepository(Conference::class)->mes5dernieresConferences();
 
-        return $this->render("conferences/menu.html.twig", ['conferences' => $conferences, 'categories' => $categories,'lastConferences'=>$lastConferences]);
+        return $this->render("conferences/menu.html.twig", ['conferences' => $conferences, 'categories' => $categories, 'lastConferences' => $lastConferences]);
     }
     #[Route('/teste', name: 'teste.length')]
     public function teste(Request $request)
