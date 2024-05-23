@@ -31,8 +31,8 @@ class ConferencesController extends AbstractController
     }
 
     // le nom d'une route doit être unique
-    #[Route('/conferences', name: 'conference.index')]
     // #[Route('/conferences/categorie/{nom}', name: 'conference.categorie')]
+    #[Route('/conferences', name: 'conference.index')]
     #[Route('/conferences/categorie/{id}', name: 'conference.categorie')]
     public function index(LoggerInterface $logger, Request $request, CategorieRepository $categorie): Response
     {
@@ -51,6 +51,8 @@ class ConferencesController extends AbstractController
         } else {
             $conferences = $this->em->getRepository(Conference::class)->findAll();
         }
+       
+        // dd($lastConferences);
         // ici on retourne le template conferences.html.twig par rapport aux parametres passés en arguments
         // $categories = $categorie->findAll();
         $categories = $this->em->getRepository(Categorie::class)->findAll();
@@ -68,7 +70,7 @@ class ConferencesController extends AbstractController
         //     }
         // }
         // je recupere la conference par rapport à son id (l'id qu'on lui a donné)
-        $conference = $this->em->getRepository(Conference::class)->find($id);
+        $conference = $this->em->getRepository(Conference::class)->find($id); //query("select * from conference where id=$id");
 
         return $this->render("conferences/conference.html.twig", ['conference' => $conference]);
     }
@@ -131,7 +133,7 @@ class ConferencesController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() and $form->isValid()) {
-// dd($antiSpam->alert($form->get('description')->getData()));
+
                if($antiSpam->alert($form->get('description')->getData())){
                 throw new Exception('le message est considéré comme un spam');
                }
@@ -159,36 +161,15 @@ class ConferencesController extends AbstractController
 
         return $this->render("conferences/ajout.html.twig", ['form' => $form->createView(), 'bouton' => 'ajouter']);
     }
-    // #[Route('/conferences/categorie/{id}', name:'conference.categorie')]
-    // public function conferencesParCategorie(ConferenceRepository $conference, $id){
-    //     $conferences = $conference->findBy(['categorie'=>$id]);
-    //     return $this->render("conferences/conferences.html.twig",['conferences'=>$conferences]);
-    // }
     #[Route('/conferences/menu', name: 'conference.menu')]
     public function menu()
     {
-        $conferences = $this->em->getRepository(Conference::class)->findAll();
         $categories = $this->em->getRepository(Categorie::class)->findAll();
-        return $this->render("conferences/menu.html.twig", ['conferences' => $conferences, 'categories' => $categories]);
-    }
-    // #[Route('/conferences/titleLength', name: 'conference.titleLength')]
-    // public function prix()
-    // {
-    //     $conferences = $this->em->getRepository(Conference::class)->findByTitleLength(10);
-    //     return $this->render("conferences/query.html.twig", ['conferences' => $conferences]);
-    // }
+        $conferences = $this->em->getRepository(Conference::class)->findAll(); // $pdo->query("select * from conference");
+        $lastConferences = $this->em->getRepository(Conference::class)->mes5dernieresConferences();
 
-    // #[Route('/teste', name: 'teste.length')]
-    // public function teste(Request $request)
-    // {
-    //     // dd($request->query->get('nb'));
-    //     $nb = $request->query->get('nb');
-    //     if ($nb) {
-    //         $conferences = $this->em->getRepository(Conference::class)->findByTitleLength($nb);
-    //         return $this->render("conferences/conferences.html.twig", ['conferences' => $conferences]);
-    //     }
-    //     return $this->render("conferences/query.html.twig");
-    // }
+        return $this->render("conferences/menu.html.twig", ['conferences' => $conferences, 'categories' => $categories,'lastConferences'=>$lastConferences]);
+    }
     #[Route('/teste', name: 'teste.length')]
     public function teste(Request $request)
     {

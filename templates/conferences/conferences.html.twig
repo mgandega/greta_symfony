@@ -8,12 +8,15 @@
         {{ dump(prenom[0]['age']) }}
 
         {{ 'hello'|upper}} #}
+        {{ parent() }}
     <div class="container">
         <div class="row">
         <div class="col-sm-4" style="height:800px"> 
         <p><a href="{{ path('conference.add') }}">Ajouter une conférence</a></p>
         {{ include("conferences/partials/_menu.html.twig") }}
+        <ul>
 
+</UL>
         {# <ul>
         {% for categorie in categories %}
        <li> <a href="{{ path('conference.categorie',{'nom':categorie['nom']}) }}">{{ categorie['nom'] }}</a></li>

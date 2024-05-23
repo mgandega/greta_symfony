@@ -69,6 +69,18 @@ class ConferenceRepository extends ServiceEntityRepository
             ->getResult();
 
     }
+    /**
+     * @return Conference[] Returns an array of Conference objects
+     */
+    public function mes5dernieresConferences(): array
+    {
+        return $this->createQueryBuilder('conf')
+            ->setMaxResults(5)
+            ->orderBy('conf.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+    }
 
     //    public function findOneBySomeField($value): ?Conference
     //    {

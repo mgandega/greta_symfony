@@ -1,6 +1,11 @@
-{% for conference in conferences %}
+{# {% for conference in conferences %}
     <div> <p><a href="{{path("conference.details",{'id':conference.id})}}">{{ conference.titre}}</a></p></div>
-{% endfor %}
+{% endfor %} #}
+<ul>
+{% for lastConference in lastConferences %}
+  <li><a href="{{ path("conference.details",{'id':lastConference.id})}}">{{ lastConference.titre }}</a></li>
+ {% endfor %}
+ </ul>
 <h5>Affichage par catégorie:</h5>
 {% for categorie in categories %}
 {# <div><a href="{{ path('conference.categorie',{'nom':categorie.nom})}}">{{ categorie.nom }}</a></div> #}
