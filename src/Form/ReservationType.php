@@ -7,6 +7,7 @@ use App\Entity\Reservation;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -26,8 +27,9 @@ class ReservationType extends AbstractType
             ->add('user', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'id',
+                'multiple' => true,
             ])
-        ;
+            ->add('reserver', SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
