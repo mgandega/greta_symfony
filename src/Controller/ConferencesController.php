@@ -123,6 +123,7 @@ class ConferencesController extends AbstractController
     public function add(Request $request, ValidatorInterface $validator, AntiSpam $antiSpam)
     {
 
+        // en mettant 'validation_groups'=>'create', on est obligé de respecter la contrainte de validation
         $conference = new Conference();
         $form = $this->createForm(ConferenceType::class, $conference, ['button_label' => 'Ajouter une conférence', 'validation_groups'=>'create']);
         // ici je lie les données du formulaire avec l'objet conference s'il y'en a
