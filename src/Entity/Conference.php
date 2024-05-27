@@ -58,11 +58,18 @@ class Conference
     #[ORM\ManyToOne(inversedBy: 'conference')]
     private ?User $user = null;
 
+    /**
+     * @var Collection<int, Reservation>
+     */
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'conference')]
+    private Collection $reservation;
+
 
     public function __construct()
     {
         $this->date = new DateTimeImmutable();
         $this->commentaires = new ArrayCollection();
+        $this->reservation = new ArrayCollection();
     }
     public function getId(): ?int
     {
@@ -191,6 +198,36 @@ class Conference
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservation(): Collection
+    {
+        return $this->reservation;
+    }
+
+    public function addReservation(Reservation $reservation): static
+    {
+        if (!$this->reservation->contains($reservation)) {
+            $this->reservation->add($reservation);
+            $reservation->setConference($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): static
+    {
+        if ($this->reservation->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getConference() === $this) {
+                $reservation->setConference(null);
+            }
+        }
 
         return $this;
     }
