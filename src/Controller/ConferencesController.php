@@ -18,6 +18,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ConferencesController extends AbstractController
@@ -51,6 +52,7 @@ class ConferencesController extends AbstractController
         } else {
             $conferences = $this->em->getRepository(Conference::class)->findAll();
         }
+    
 
         // dd($lastConferences);
         // ici on retourne le template conferences.html.twig par rapport aux parametres passés en arguments
@@ -78,12 +80,6 @@ class ConferencesController extends AbstractController
     #[Route('/conference/edit/{id}', name: 'conference.edit')]
     public function editer(Request $request, $id)
     {
-        // foreach ($this->conferences as $cle => $conference) {
-        //     if ($conference['id'] == $id) {
-        //         $conference['titre'] = 'conference diango';
-        //         $conferences[] = $conference;
-        //     }
-        // }
 
         $conference = $this->em->getRepository(Conference::class)->find($id);
 
@@ -106,6 +102,7 @@ class ConferencesController extends AbstractController
                 $conference->getImage()->setFile($conference->getImage()->getFile());
                 $chemin = $bddFile . '/' . $filename;
             }
+            $conference->setUser($this->getUser());
             // on utilise seulement le flush() si on veut supprimer ou modifier
             // si on utilise persist() et flush(), on rajoutera une autre ligne dans la table
             $this->em->flush();
@@ -127,16 +124,16 @@ class ConferencesController extends AbstractController
     {
 
         $conference = new Conference();
-        $form = $this->createForm(ConferenceType::class, $conference, ['button_label' => 'Ajouter une conférence']);
+        $form = $this->createForm(ConferenceType::class, $conference, ['button_label' => 'Ajouter une conférence', 'validation_groups'=>'create']);
         // ici je lie les données du formulaire avec l'objet conference s'il y'en a
         // il hydrate les propriétés
         $form->handleRequest($request);
 
         if ($form->isSubmitted() and $form->isValid()) {
 
-            if ($antiSpam->alert($form->get('description')->getData())) {
-                throw new Exception('le message est considéré comme un spam');
-            }
+            // if ($antiSpam->alert($form->get('description')->getData())) {
+            //     throw new Exception('le message est considéré comme un spam');
+            // }
 
             $dossier_images = $_SERVER['DOCUMENT_ROOT'] . "uploads/images";
             // dd($request->server['DOCUMENT_ROOT']);
@@ -152,6 +149,7 @@ class ConferencesController extends AbstractController
             $conference->getImage()->setAlt($filename);
             $conference->getImage()->setFile($objectFile);
 
+            $conference->setUser($this->getUser());
 
             $this->em->persist($conference);
             $this->em->flush();

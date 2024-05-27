@@ -33,7 +33,7 @@ class ConferenceType extends AbstractType
                 'multiple' => false,
                 'expanded' => true
             ])
-            ->add('image',ImageType::class)
+            ->add('image',ImageType::class,['validation_groups'=>$options['validation_groups']])
             ->add('save', SubmitType::class,['label' => $options['button_label']])
             ;
     }
@@ -42,7 +42,8 @@ class ConferenceType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Conference::class,
-            'button_label'=>'Submit'
+            'button_label'=>'Submit',
+            'validation_groups'=>['Default']
         ]);
     }
 }

@@ -55,6 +55,10 @@ class Conference
     #[ORM\Column(nullable: true)]
     private ?int $favorite = null;
 
+    #[ORM\ManyToOne(inversedBy: 'conference')]
+    private ?User $user = null;
+
+
     public function __construct()
     {
         $this->date = new DateTimeImmutable();
@@ -178,4 +182,17 @@ class Conference
 
         return $this;
     }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
 }

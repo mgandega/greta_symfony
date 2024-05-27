@@ -30,7 +30,7 @@ class Image
         extensions: ['jpeg','jpg','png','webp'],
         extensionsMessage: 'Veuillez entrer en pdf valide',
     )]
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank(message:"l'image ne doit pas être vide",groups:['create'])]
     public $file;
 
     public function getId(): ?int
