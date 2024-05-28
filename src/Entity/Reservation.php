@@ -26,16 +26,13 @@ class Reservation
     #[ORM\JoinColumn(nullable: false)]
     private ?Conference $conference = null;
 
-    /**
-     * @var Collection<int, User>
-     */
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'reservations', cascade:['persist'])]
-    private Collection $user;
+    #[ORM\ManyToOne(inversedBy: 'reservations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
-        $this->user = new ArrayCollection();
     }
     public function getId(): ?int
     {
@@ -78,27 +75,16 @@ class Reservation
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUser(): Collection
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function addUser(User $user): static
+    public function setUser(?User $user): static
     {
-        if (!$this->user->contains($user)) {
-            $this->user->add($user);
-        }
+        $this->user = $user;
 
         return $this;
     }
 
-    public function removeUser(User $user): static
-    {
-        $this->user->removeElement($user);
-
-        return $this;
-    }
 }

@@ -14,14 +14,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ReservationController extends AbstractController
 {
     #[Route('/reservation/{id}', name: 'app_reservation')]
-    public function index(ConferenceRepository $conferenceRepository,EntityManagerInterface $manager, Request $request,$id): Response
+    public function index(ConferenceRepository $conferenceRepository, EntityManagerInterface $manager, Request $request, $id): Response
     {
         // return new Response($id);
         $conference = $conferenceRepository->find($id);
-       $reservation =  new Reservation();
-       $form = $this->createForm(ReservationType::class,$reservation);
-       $form->handlerequest($request);
-    
-        return $this->render('reservation/index.html.twig',['form'=>$form->createView()]);
+        $reservation =  new Reservation();
+
+        return $this->render('reservation/index.html.twig');
     }
 }
