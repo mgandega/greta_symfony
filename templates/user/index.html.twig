@@ -4,6 +4,16 @@
 
 {% block body %}
 {{ parent() }}
+
+{% if app.request.session.get('mode') == "ouverture" %}
+    {{ app.request.session.set('mode','fermeture') }}
+    {% set mode = app.request.session.get('mode')%}
+    {{ dump(mode)}}
+{% else %}
+    {{ app.request.session.set('mode','ouverture') }}
+    {% set mode = app.request.session.get('mode')%}
+    {{ dump(mode)}}
+{% endif %}
 <div class="container">
     <div class="row">
         <div class="col-sm-10"></div>
@@ -14,12 +24,14 @@
         <h5><a href="{{ path('user.profil',{'id':app.user.id})~'?infos=infos' }}">Mes informations personnelles</a></h5>
         <h5><a href="{{ path('user.profil',{'id':app.user.id})~'?infos=infos&conferences=conferences'}}">Mes conférences</a></h5>
 {% if app.request.query.get('conferences') %}
+{% if app.request.session.get('mode') == "ouverture" %}
+{% else %}
 <ul>
-{# {{ dump(conferences) }} #}
 {% for conference in conferences %}
     <li><a href="{{path('user.conference',{idConf:conference.id})~'?conferences=conferences&commentaires=commentaires'}}">{{conference.titre}}</a></li>
 {% endfor %}
 </ul>
+{% endif %}
 {% endif %}
         <h5><a href="">Mes réservations</a></h5>
         </div>

@@ -1,0 +1,11 @@
+Espace profil:
+- on crée 3 liens : infos personnelles, mes conferences, mes réservations
+- pour les informations personnelles :
+  - on creer un lien qui nous permet d'afficher les infos, pour cela :
+    - on ecrit le len : <a href="?infos=infos"> infos personnelles</a>
+    - en mettant ?infos=infos, on fait passer sur l'url cette information (?infos=infos),
+    donc on aura quelque chose qui ressemble à ceci: https://localhost:8000/profil/17?infos=infos
+    - on le fait pour pouvoir le recuperer en GET (en php natif, on faisait $_GET['infos']  mais en symfony c'est : app.request.query.get('infos'), du coup on pourra faire par la suite des testes comme par exemple : si infos se trouve sur l'url affiches moi telle ou telle chose, on le traduit en code par ceci : {% if app.request.query.get('infos') %} Affiche ceci ou cela {% endif %}
+
+
+

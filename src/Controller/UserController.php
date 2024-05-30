@@ -19,15 +19,14 @@ class UserController extends AbstractController
         $commentaires = '';
         // $user = $manager->getRepository(User::class)->find($id);
         $user = $this->getUser();
+        // recuperes moi toutes les conferences dont l'utilisateur est l'utilsateur connecté
         $conferences = $manager->getRepository(Conference::class)->findBy(['user'=>$this->getUser()]);
         if(isset($idConf) and !empty($idConf)){
             $conference = $manager->getRepository(Conference::class)->find($idConf);
             $commentaires = $manager->getRepository(Commentaire::class)->findBy(['conference'=>$conference]);
-            
         }
         
         return $this->render('user/index.html.twig', [
-            'user'=>$user,
             'conferences' => $conferences,
             'commentaires'=>$commentaires
         ]);
