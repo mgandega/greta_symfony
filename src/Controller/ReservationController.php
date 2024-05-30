@@ -28,7 +28,7 @@ class ReservationController extends AbstractController
             $res = $manager->getRepository(Reservation::class)->findBy(['user'=>$this->getUser(),'conference'=>$reservation->getConference()]);
             // dd($res);
             if( count($res) > 0){
-                $this->addFlash('failure','Vous avez déja réserver pour cette conference');
+                $this->addFlash('failure','Vous avez déja réservé pour cette conference');
                 return $this->redirectToRoute('app_reservation',['id'=>$id]);
             }
             $manager->persist($reservation);

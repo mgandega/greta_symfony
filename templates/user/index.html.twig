@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+{{ parent() }}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-10"></div>
+        <div class="col-sm-2"><img src="{{ asset('img/avatar.png')}}" width="100" /></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+        <h5><a href="{{ path('user.profil',{'id':app.user.id})~'?infos=infos' }}">Mes informations personnelles</a></h5>
+        <h5><a href="{{ path('user.profil',{'id':app.user.id})~'?infos=infos&conferences=conferences'}}">Mes conférences</a></h5>
+{% if app.request.query.get('conferences') %}
+<ul>
+{# {{ dump(conferences) }} #}
+{% for conference in conferences %}
+    <li><a href="{{path('user.conference',{idConf:conference.id})~'?conferences=conferences&commentaires=commentaires'}}">{{conference.titre}}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
+        <h5><a href="">Mes réservations</a></h5>
+        </div>
+        <div class="col-sm-9">
+            {% if app.request.query.get('infos') %}
+            <p>
+            <i>prénom : {{ app.user.firstName}}</i><br>
+            <i>nom : {{ app.user.lastName}}</i><br>
+            <i>email : {{ app.user.email}}</i><br>
+            <i>téléphone : {{ app.user.telephone}}</i><br>
+            </p>
+            {% endif %}
+             {% if app.request.query.get('commentaires') %}
+             <h5>titre conférence : {{ commentaires[0].conference.titre }}</h5> 
+                {% for commentaire in commentaires %}
+                 <i>{{ commentaire.pseudo}}</i><br>
+                 <i>{{ commentaire.content}}</i><br><br>
+                {% endfor %}
+             {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
