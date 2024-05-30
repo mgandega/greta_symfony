@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Reservation
 {
     #[ORM\Id]
@@ -87,4 +88,8 @@ class Reservation
         return $this;
     }
 
+    #[ORM\PrePersist]
+    public function incrementation(){
+        $this->getConference()->incremente();
+    }
 }

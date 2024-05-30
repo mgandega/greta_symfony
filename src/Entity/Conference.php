@@ -62,6 +62,9 @@ class Conference
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $nbReservations = 0;
+
 
     public function __construct()
     {
@@ -212,10 +215,27 @@ class Conference
     }
 
     #[ORM\PreUpdate]
-    public function updatedAt():static
+    public function updatedAt(): static
     {
         $this->updatedAt = new DateTimeImmutable();
         return $this;
     }
 
+    public function getNbReservations(): ?int
+    {
+        return $this->nbReservations;
+    }
+
+    public function setNbReservations(?int $nbReservations): static
+    {
+        $this->nbReservations = $nbReservations;
+
+        return $this;
+    }
+
+    public function incremente():void
+    {
+        $this->nbReservations++;
+        // $this->nbReservations = $this->nbReservations + 1;
+    }
 }
