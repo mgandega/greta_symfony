@@ -9,3 +9,13 @@ Espace profil:
 
 
 
+// - prePersist() => avant la persistance des informations (avant le flush())
+// - postPersist() => apres la persistance des informations (apres le flush())
+// - preRemove() => avant la suppression des informations (avant le flush())
+
+exercice: 
+- creer un champ dans conference qui s'appelle nbReservations 
+créer un systeme qui utilise l'evenement prePersist pour incrémenter le nombre de reservation dans l'entité conférence
+- vous travaillerai sur deux entités reservation et conference 
+
+

@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[Assert\EnableAutoMapping]
 #[ORM\Entity(repositoryClass: ConferenceRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Conference
 {
     #[ORM\Id]
@@ -57,6 +58,9 @@ class Conference
 
     #[ORM\ManyToOne(inversedBy: 'conference')]
     private ?User $user = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
 
 
     public function __construct()
@@ -192,6 +196,25 @@ class Conference
     {
         $this->user = $user;
 
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    #[ORM\PreUpdate]
+    public function updatedAt():static
+    {
+        $this->updatedAt = new DateTimeImmutable();
         return $this;
     }
 
