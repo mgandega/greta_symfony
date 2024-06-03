@@ -1,0 +1,7 @@
+- Intallation easyAdmin :
+  - composer require  easycorp/easyadmin-bundle
+- Installation du dashborad :
+ - bin/console make:admin:dashboard 
+remplacement de return parent::index par return $this->render("Admin/admin.html.twig") dans la methode index de la route Admin
+ce repertoire et ce fichier seront crées à la main du coup cela permet un affichage customiser du dashboard
+- 
