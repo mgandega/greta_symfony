@@ -2,12 +2,7 @@
 
 {% block title %}Hello ConferencsController!{% endblock %}
 {% block body %}
-{# {{ parent() }} #}
-{# foreach($conferences as $conference) => {% for conference in conferences %} #}
-        {# {{ dump(prenom) }}
-        {{ dump(prenom[0]['age']) }}
 
-        {{ 'hello'|upper}} #}
         {{ parent() }}
     <div class="container mt-5">
         <div class="row">
@@ -17,11 +12,6 @@
         <ul>
 
 </UL>
-        {# <ul>
-        {% for categorie in categories %}
-       <li> <a href="{{ path('conference.categorie',{'nom':categorie['nom']}) }}">{{ categorie['nom'] }}</a></li>
-        {% endfor %}
-        </ul> #}
         </div>
         <div class="col-sm-8">
         {% for conference in conferences %}

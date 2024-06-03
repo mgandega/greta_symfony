@@ -52,7 +52,7 @@ class ConferencesController extends AbstractController
         } else {
             $conferences = $this->em->getRepository(Conference::class)->findAll();
         }
-    
+
 
         // dd($lastConferences);
         // ici on retourne le template conferences.html.twig par rapport aux parametres passés en arguments
@@ -125,7 +125,7 @@ class ConferencesController extends AbstractController
 
         // en mettant 'validation_groups'=>'create', on est obligé de respecter la contrainte de validation
         $conference = new Conference();
-        $form = $this->createForm(ConferenceType::class, $conference, ['button_label' => 'Ajouter une conférence', 'validation_groups'=>'create']);
+        $form = $this->createForm(ConferenceType::class, $conference, ['button_label' => 'Ajouter une conférence', 'validation_groups' => 'create']);
         // ici je lie les données du formulaire avec l'objet conference s'il y'en a
         // il hydrate les propriétés
         $form->handleRequest($request);
@@ -192,5 +192,28 @@ class ConferencesController extends AbstractController
         $this->em->flush();
 
         return $this->redirectToRoute('conference.details', ['id' => $id]);
+    }
+
+    #[Route('/conference/recherche/date', name: 'conference.recherche')]
+    public function recherche(Request $request)
+    {
+        $date = $request->query->get('date'); //$_POST['date']
+
+        
+        if ($request->query->get('date')) {
+            $conferences = $this->em->getRepository(Conference::class)->conferenceParDate($date);
+        } elseif ($request->attributes->get('id')) {
+            // $conferences = $this->em->getRepository(Conference::class)->findBy(['categorie' => $request->attributes->get('nom')]);
+            // $conferences = $this->em->getRepository(Conference::class)->conferencesParCategorie($request->attributes->get('nom'));
+            $conferences = $this->em->getRepository(Conference::class)->findBy(['categorie' => $request->attributes->get('id')]);
+        } else {
+            $conferences = $this->em->getRepository(Conference::class)->findAll();
+        }
+        $categories = $this->em->getRepository(Categorie::class)->findAll();
+        // $categories = $this->em->getRepository(Categorie::class)->categorieUnique();
+        // return $this->render("conferences/conferences.html.twig", ['conferences' => $conferences, 'categories' => $categories]);
+        return $this->render("conferences/conferences.html.twig", compact('conferences', 'categories'));
+        // dd($conferences);
+
     }
 }

@@ -24,11 +24,21 @@ class ConferenceRepository extends ServiceEntityRepository
     /**
      * @return Conference[] Returns an array of Conference objects
      */
-    public function findByTitleLength($value): array
+    // public function findByTitleLength($value): array
+    // {
+    //     return $this->createQueryBuilder('c')
+    //         ->andWhere('c.date <= :val')
+    //         ->setParameter('val', $value)
+    //         ->orderBy('c.id', 'ASC')
+    //         ->setMaxResults(10)
+    //         ->getQuery()
+    //         ->getResult();
+    // }
+    public function conferenceParDate($value): array
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.date <= :val')
-            ->setParameter('val', $value)
+            ->setParameter('val', $value.' 00-00-00')
             ->orderBy('c.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
