@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Exception;
 use App\AntiSpam;
 use DateTimeImmutable;
 use App\Entity\Categorie;
@@ -11,15 +12,15 @@ use Psr\Log\LoggerInterface;
 use App\Repository\CategorieRepository;
 use App\Repository\ConferenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ConferencesController extends AbstractController
 {
@@ -36,7 +37,7 @@ class ConferencesController extends AbstractController
     // #[Route('/conferences/categorie/{nom}', name: 'conference.categorie')]
     #[Route('/conferences', name: 'conference.index')]
     #[Route('/conferences/categorie/{id}', name: 'conference.categorie')]
-    public function index(LoggerInterface $logger, Request $request, CategorieRepository $categorie): Response
+    public function index(PaginatorInterface $paginator, LoggerInterface $logger, Request $request, CategorieRepository $categorie): Response
     {
         // dd(get_class_methods($logger));        // dd($request->attributes->get('id'));
         // $logger->info('juste une information');        // dd($request->attributes->get('id'));
@@ -60,6 +61,13 @@ class ConferencesController extends AbstractController
         $categories = $this->em->getRepository(Categorie::class)->findAll();
         // $categories = $this->em->getRepository(Categorie::class)->categorieUnique();
         // return $this->render("conferences/conferences.html.twig", ['conferences' => $conferences, 'categories' => $categories]);
+
+        $conferences = $paginator->paginate(
+            $conferences, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            6 /*limit per page*/
+        );
+
         return $this->render("conferences/conferences.html.twig", compact('conferences', 'categories'));
     }
 
