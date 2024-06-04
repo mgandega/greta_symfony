@@ -65,11 +65,18 @@ class Conference
     #[ORM\Column(nullable: true)]
     private ?int $nbReservations = 0;
 
+    /**
+     * @var Collection<int, Competence>
+     */
+    #[ORM\ManyToMany(targetEntity: Competence::class, inversedBy: 'conferences')]
+    private Collection $competence;
+
 
     public function __construct()
     {
         $this->date = new DateTimeImmutable();
         $this->commentaires = new ArrayCollection();
+        $this->competence = new ArrayCollection();
     }
     public function getId(): ?int
     {
@@ -237,5 +244,29 @@ class Conference
     {
         $this->nbReservations++;
         // $this->nbReservations = $this->nbReservations + 1;
+    }
+
+    /**
+     * @return Collection<int, Competence>
+     */
+    public function getCompetence(): Collection
+    {
+        return $this->competence;
+    }
+
+    public function addCompetence(Competence $competence): static
+    {
+        if (!$this->competence->contains($competence)) {
+            $this->competence->add($competence);
+        }
+
+        return $this;
+    }
+
+    public function removeCompetence(Competence $competence): static
+    {
+        $this->competence->removeElement($competence);
+
+        return $this;
     }
 }

@@ -6,7 +6,9 @@ use Exception;
 use App\AntiSpam;
 use DateTimeImmutable;
 use App\Entity\Categorie;
+use App\Entity\Competence;
 use App\Entity\Conference;
+use App\Form\CompetenceType;
 use App\Form\ConferenceType;
 use Psr\Log\LoggerInterface;
 use App\Repository\CategorieRepository;
@@ -35,7 +37,7 @@ class ConferencesController extends AbstractController
 
     // le nom d'une route doit être unique
     // #[Route('/conferences/categorie/{nom}', name: 'conference.categorie')]
-    #[Route('/conferences', name: 'conference.index')]
+    #[Route('/', name: 'conference.index')]
     #[Route('/conferences/categorie/{id}', name: 'conference.categorie')]
     public function index(PaginatorInterface $paginator, LoggerInterface $logger, Request $request, CategorieRepository $categorie): Response
     {
@@ -207,7 +209,7 @@ class ConferencesController extends AbstractController
     {
         $date = $request->query->get('date'); //$_POST['date']
 
-        
+
         if ($request->query->get('date')) {
             $conferences = $this->em->getRepository(Conference::class)->conferenceParDate($date);
         } elseif ($request->attributes->get('id')) {
@@ -223,5 +225,20 @@ class ConferencesController extends AbstractController
         return $this->render("conferences/conferences.html.twig", compact('conferences', 'categories'));
         // dd($conferences);
 
+    }
+
+    #[Route('competence/add', name: 'conference.ajoutCompetence')]
+    public function ajoutCompetence(request $request)
+    {
+        $competence = new Competence();
+        $form = $this->createForm(CompetenceType::class, $competence);
+        $form->handleRequest($request);
+        // si le formulaire est soumis et est valide
+        if ($form->isSubmitted() && $form->isvalid()) {
+            $this->em->persist($competence);
+            $this->em->flush();
+            return $this->redirectToRoute('conference.index');
+        }
+        return $this->render("conferences/ajoutCompetence.html.twig",["form"=>$form->createView()]);
     }
 }

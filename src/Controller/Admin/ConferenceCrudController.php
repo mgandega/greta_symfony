@@ -23,7 +23,8 @@ class ConferenceCrudController extends AbstractCrudController
             IdField::new('id')->hideOnIndex(),
             TextField::new('titre'),
             TextField::new('description'),
-            AssociationField::new('categorie')->autocomplete()            
+            AssociationField::new('categorie')->autocomplete()  
+                      
         ];
     }
     
