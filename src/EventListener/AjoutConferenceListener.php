@@ -19,7 +19,7 @@ final class AjoutConferenceListener
     #[AsEventListener(event: AjoutConferenceEvent::class)]
     public function onAjoutConferenceEvent(AjoutConferenceEvent $event): void
     {
-
+       
         $email = $event->user->getEmail();
         $pseudo = $event->user->getFirstname();
         $message = $event->conference->getDescription();

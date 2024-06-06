@@ -9,6 +9,7 @@ use App\Entity\Categorie;
 use App\Entity\Competence;
 use App\Entity\Conference;
 use App\Events\AjoutConferenceEvent;
+use App\Events\ModifConferenceEvent;
 use App\Form\CompetenceType;
 use App\Form\ConferenceType;
 use Psr\Log\LoggerInterface;
@@ -41,8 +42,13 @@ class ConferencesController extends AbstractController
     // #[Route('/conferences/categorie/{nom}', name: 'conference.categorie')]
     #[Route('/', name: 'conference.index')]
     #[Route('/conferences/categorie/{id}', name: 'conference.categorie')]
-    public function index(PaginatorInterface $paginator, LoggerInterface $logger, Request $request, CategorieRepository $categorie): Response
-    {
+    public function index(
+        PaginatorInterface $paginator,
+        LoggerInterface $logger,
+        Request $request,
+        CategorieRepository $categorie,
+        EventDispatcherInterface $dispatcher
+    ): Response {
         // dd(get_class_methods($logger));        // dd($request->attributes->get('id'));
         // $logger->info('juste une information');        // dd($request->attributes->get('id'));
 
@@ -72,6 +78,7 @@ class ConferencesController extends AbstractController
             6 /*limit per page*/
         );
 
+
         return $this->render("conferences/conferences.html.twig", compact('conferences', 'categories'));
     }
 
@@ -90,7 +97,7 @@ class ConferencesController extends AbstractController
     }
 
     #[Route('/conference/edit/{id}', name: 'conference.edit')]
-    public function editer(Request $request, $id)
+    public function editer(Request $request, $id, EventDispatcherInterface $dispatcher)
     {
 
         $conference = $this->em->getRepository(Conference::class)->find($id);
@@ -118,6 +125,11 @@ class ConferencesController extends AbstractController
             // on utilise seulement le flush() si on veut supprimer ou modifier
             // si on utilise persist() et flush(), on rajoutera une autre ligne dans la table
             $this->em->flush();
+
+
+        $event = new ModifConferenceEvent($conference, $this->getuser());
+        $dispatcher->dispatch($event);
+        $this->addFlash('success','Conference modifiée avec succès');
             return $this->redirectToRoute('conference.index');
         }
         return $this->render("conferences/edit.html.twig", ['conference' => $conference, 'form' => $form->createView(), 'bouton' => 'modifier']);
@@ -132,12 +144,12 @@ class ConferencesController extends AbstractController
     }
 
     #[Route('/conference/add', name: 'conference.add')]
-    public function add(Request $request, 
-    ValidatorInterface $validator, 
-    AntiSpam $antiSpam, 
-    EventDispatcherInterface $dispatcher
-    )
-    {
+    public function add(
+        Request $request,
+        ValidatorInterface $validator,
+        AntiSpam $antiSpam,
+        EventDispatcherInterface $dispatcher
+    ) {
 
         // en mettant 'validation_groups'=>'create', on est obligé de respecter la contrainte de validation
         $conference = new Conference();
@@ -170,8 +182,8 @@ class ConferencesController extends AbstractController
 
             $this->em->persist($conference);
             $this->em->flush();
-            
-            $event = new AjoutConferenceEvent($conference,$this->getUser());
+
+            $event = new AjoutConferenceEvent($conference, $this->getUser());
             $dispatcher->dispatch($event);
 
 
@@ -239,8 +251,8 @@ class ConferencesController extends AbstractController
 
     #[Route('competence/add', name: 'conference.ajoutCompetence')]
     public function ajoutCompetence(request $request)
-    {   
-       
+    {
+
         $competence = new Competence();
         $form = $this->createForm(CompetenceType::class, $competence);
         $form->handleRequest($request);
@@ -250,6 +262,6 @@ class ConferencesController extends AbstractController
             $this->em->flush();
             return $this->redirectToRoute('conference.index');
         }
-        return $this->render("conferences/ajoutCompetence.html.twig",["form"=>$form->createView()]);
+        return $this->render("conferences/ajoutCompetence.html.twig", ["form" => $form->createView()]);
     }
 }
