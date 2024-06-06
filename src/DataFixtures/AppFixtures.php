@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use DateTime;
 use Faker\Factory;
+use App\Entity\User;
 use App\Entity\Image;
 use DateTimeImmutable;
 use App\Entity\Categorie;
@@ -13,9 +14,11 @@ use App\Entity\Commentaire;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+    public function __construct(public UserPasswordHasherInterface $passwordHasher){}
 
     public function load(ObjectManager $manager): void
     {
@@ -41,6 +44,22 @@ class AppFixtures extends Fixture
             $competence->setNom($competences[$i]);
             $manager->persist($competence);
             $com[] = $competence;
+        }
+
+        for($i=0; $i<10; $i++){
+            $user = new User();
+            $user->setEmail($faker->email())
+           ->setFirstName($faker->name)
+           ->setLastName($faker->name);
+            $hashedPassword = $this->passwordHasher->hashPassword(
+                $user,
+                $faker->name
+            );
+            $user->setPassword($hashedPassword);
+            $user->setRoles($faker->randomElement([["ROLE_ADMIN"],["ROLE_USER"]]))
+            ->setTelephone($faker->phoneNumber());
+            $manager->persist($user);
+            
         }
 
         for ($i = 1; $i <= 10; $i++) {
