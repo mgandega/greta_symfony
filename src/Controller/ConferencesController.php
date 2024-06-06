@@ -10,6 +10,7 @@ use App\Entity\Competence;
 use App\Entity\Conference;
 use App\Form\CompetenceType;
 use App\Form\ConferenceType;
+use App\Listeners\Bienvenue;
 use Psr\Log\LoggerInterface;
 use App\Repository\CategorieRepository;
 use App\Repository\ConferenceRepository;
@@ -229,7 +230,8 @@ class ConferencesController extends AbstractController
 
     #[Route('competence/add', name: 'conference.ajoutCompetence')]
     public function ajoutCompetence(request $request)
-    {
+    {   
+       
         $competence = new Competence();
         $form = $this->createForm(CompetenceType::class, $competence);
         $form->handleRequest($request);

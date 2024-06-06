@@ -7,6 +7,7 @@ use Faker\Factory;
 use App\Entity\Image;
 use DateTimeImmutable;
 use App\Entity\Categorie;
+use App\Entity\Competence;
 use App\Entity\Conference;
 use App\Entity\Commentaire;
 use Doctrine\Persistence\ObjectManager;
@@ -33,6 +34,15 @@ class AppFixtures extends Fixture
             $cat[] = $categorie;
         }
 
+        $competences = ['html/css','php','symfony','laravel','python'];
+        $com = [];
+        for ($i = 0; $i <5 ; $i++) {
+            $competence = new Competence();
+            $competence->setNom($competences[$i]);
+            $manager->persist($competence);
+            $com[] = $competence;
+        }
+
         for ($i = 1; $i <= 10; $i++) {
             $image = new Image();
             $fichier = "https://blog.1001salles.com/wp-content/uploads/2015/04/preparer-sa-salle.jpg";
@@ -57,8 +67,11 @@ class AppFixtures extends Fixture
                 ->setLieu($faker->city)
                 ->setDate(new DateTimeImmutable())
                 ->setCategorie($faker->randomElement($cat))
-                ->setImage($this->getReference('image' . $i))
-                ->setFavorite(0);
+                ->setImage($this->getReference('image' . $i));
+                foreach($com as $c){
+                    $conference->addCompetence($c);
+                }
+                $conference->setFavorite(0);
             $manager->persist($conference);
             $this->addReference('conference' . $i, $conference);
         }
