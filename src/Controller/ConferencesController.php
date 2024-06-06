@@ -8,9 +8,9 @@ use DateTimeImmutable;
 use App\Entity\Categorie;
 use App\Entity\Competence;
 use App\Entity\Conference;
+use App\Events\AjoutConferenceEvent;
 use App\Form\CompetenceType;
 use App\Form\ConferenceType;
-use App\Listeners\Bienvenue;
 use Psr\Log\LoggerInterface;
 use App\Repository\CategorieRepository;
 use App\Repository\ConferenceRepository;
@@ -24,6 +24,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ConferencesController extends AbstractController
 {
@@ -131,7 +132,11 @@ class ConferencesController extends AbstractController
     }
 
     #[Route('/conference/add', name: 'conference.add')]
-    public function add(Request $request, ValidatorInterface $validator, AntiSpam $antiSpam)
+    public function add(Request $request, 
+    ValidatorInterface $validator, 
+    AntiSpam $antiSpam, 
+    EventDispatcherInterface $dispatcher
+    )
     {
 
         // en mettant 'validation_groups'=>'create', on est obligé de respecter la contrainte de validation
@@ -165,6 +170,10 @@ class ConferencesController extends AbstractController
 
             $this->em->persist($conference);
             $this->em->flush();
+            
+            $event = new AjoutConferenceEvent($conference,$this->getUser());
+            $dispatcher->dispatch($event);
+
 
             return $this->redirectToRoute("conference.index");
         }
