@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Page inaccessible</h1>
+
+    <p>
+        Vous n'avez pas le droit d'acceder à cette page, seul les administrateurs y ont accès .
+         <a href="{{ path('conference.index') }}">retour à la page d'accueil</a>.
+    </p>
+{% endblock %}
