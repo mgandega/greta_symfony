@@ -9,6 +9,7 @@ use Symfony\Component\Mime\Email;
 use App\Events\SuppConferenceEvent;
 use App\Events\AjoutConferenceEvent;
 use App\Events\ModifConferenceEvent;
+use App\Events\InscriptionConferenceEvent;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -24,7 +25,8 @@ class AjoutConferenceSubscriber implements EventSubscriberInterface
         return [
             AjoutConferenceEvent::class => 'onAjoutConferenceEvent',
             ModifConferenceEvent::class => 'onModifConferenceEvent',
-            SuppConferenceEvent::class => 'onSuppConferenceEvent'
+            SuppConferenceEvent::class => 'onSuppConferenceEvent',
+            InscriptionConferenceEvent::class => 'onInscriptionConferenceEvent'
         ];
     }
 
@@ -59,6 +61,32 @@ class AjoutConferenceSubscriber implements EventSubscriberInterface
             ->from('admin@monsite.com')
             ->to($email)
             ->subject('Confirmation de suppression')
+            ->text($message)
+            ->html($htmlContent);
+
+        $this->mailer->send($email);
+    }
+
+    public function onInscriptionConferenceEvent(InscriptionConferenceEvent $event){
+        $message = "Welcome";
+        $titre = "Inscription réussie";
+        $pseudo = $event->user->getFirstname();
+        $email = $event->user->getEmail();
+
+        $date = new Datetime($datetime = 'now');
+        // Génération du contenu HTML avec Twig
+        $htmlContent = $this->twig->render('contact\mailer.html.twig', [
+            'message' => $message,
+            'name' => $pseudo,
+            'titre' => $titre,
+            'date' => $date
+
+        ]);
+
+        $email = (new Email())
+            ->from('admin@monsite.com')
+            ->to($email)
+            ->subject('Confirmation d\'inscription')
             ->text($message)
             ->html($htmlContent);
 

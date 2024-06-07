@@ -187,24 +187,40 @@ class ConferencesController extends AbstractController
 
             $conference->setUser($this->getUser());
 
-            
+
             $time = time();
-            
+
             $session = $request->getSession();
             $date = $session->get('date');
             if (isset($date) and $time - $date > 30) {
                 $session->set('date', $time);
+
+                // on vérifie si le contenu du message contient un mot interdit
+                $description = $conference->getDescription();
+                $tab = explode(' ', $description); // on transforme la description en tableau où chaque mot de la descriptoin sera un élément du tableau ($tab)
+                $motsInterdits = ["abandon", "demotivation"];
+                // on texte si les mots abandon et demotivation se trouve dans le tableau ($tab)
+                foreach ($motsInterdits as $mot) {
+                    if (in_array($mot, $tab)) {
+                        throw new Exception("la description contient au moin un mot interdit");
+                    }
+                }
+                // fin vérification
+
                 $this->em->persist($conference);
                 $this->em->flush();
             } else {
                 if ($date) {
                     $session->set('date', $time);
-                  echo "passage de moin de 30 secondes";  
+                    echo "passage de moin de 30 secondes";
                 } else {
                     $session->set('date', $time);
                     echo "premier passage";
                 }
             }
+
+     
+
 
             $event = new AjoutConferenceEvent($conference, $this->getUser());
             $dispatcher->dispatch($event);

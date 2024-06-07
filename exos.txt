@@ -1,9 +1,9 @@
 - créer un systeme qui permet d'empecher la création de deux conférences en moin de 15s . 
 Un message d'alerte sera envoyé affichant : vous n'avez pas le droit de créer deux conferences en moin de 15 s
 
-- créons un systeme qui permet de détecter si le texte contenu dans le champs de la description contient les mots : abandon ou demotivation avec les callback
-Si un des ces mots est trouvé, un message d'alerte sera affiché
-    
+    - créons un systeme qui permet de détecter si le texte contenu dans le champs de la description contient les mots : abandon ou demotivation avec les callback
+    Si un des ces mots est trouvé, un message d'alerte sera affiché
+
 - créer un systeme qui permet d'envoyer un mail une fois que l'utilisateur s'est inscrit sur le site
 
 -    role_hierarchy:
