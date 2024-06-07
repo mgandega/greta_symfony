@@ -187,34 +187,27 @@ class ConferencesController extends AbstractController
 
             $conference->setUser($this->getUser());
 
-            // $this->em->persist($conference);
-            // $this->em->flush();
-
+            
             $time = time();
-
+            
             $session = $request->getSession();
-            // $session->set('date', $time);
-            $d = $session->get('d');
-            if (isset($d) and $time - $d > 30) {
-                $session->set('d', $time);
-                echo "passage de plus de 30 secondes";
+            $date = $session->get('date');
+            if (isset($date) and $time - $date > 30) {
+                $session->set('date', $time);
+                $this->em->persist($conference);
+                $this->em->flush();
             } else {
-                if ($d) {
-                    $session->set('d', $time);
-                    echo "passage de moin de 30 secondes";
+                if ($date) {
+                    $session->set('date', $time);
+                  echo "passage de moin de 30 secondes";  
                 } else {
-                    $session->set('d', $time);
+                    $session->set('date', $time);
                     echo "premier passage";
                 }
             }
-            dd($session);
 
-            // $event = new AjoutConferenceEvent($conference, $this->getUser());
-            // $dispatcher->dispatch($event);
-
-
-
-
+            $event = new AjoutConferenceEvent($conference, $this->getUser());
+            $dispatcher->dispatch($event);
 
             return $this->redirectToRoute("conference.index");
         }
