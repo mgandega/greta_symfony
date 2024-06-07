@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block body %}
+ {# 'message' => $message,
+            'name' => $pseudo,
+            'titre' => $titre,
+            'date' => $date #}
 <h4>Bonjour {{ name }}</h4>
-<p>votre message: {{ message}}</p>
+<p>On est désolé que vous ayez supprimé la conference : {{ titre}} à la date du {{ date|date('d-m-Y') }} à {{ date|date('h:i:s') }}</p>
 {% endblock %}

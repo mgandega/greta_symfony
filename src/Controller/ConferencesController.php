@@ -8,11 +8,12 @@ use DateTimeImmutable;
 use App\Entity\Categorie;
 use App\Entity\Competence;
 use App\Entity\Conference;
-use App\Events\AjoutConferenceEvent;
-use App\Events\ModifConferenceEvent;
 use App\Form\CompetenceType;
 use App\Form\ConferenceType;
 use Psr\Log\LoggerInterface;
+use App\Events\SuppConferenceEvent;
+use App\Events\AjoutConferenceEvent;
+use App\Events\ModifConferenceEvent;
 use App\Repository\CategorieRepository;
 use App\Repository\ConferenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,8 +25,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ConferencesController extends AbstractController
 {
@@ -135,11 +136,17 @@ class ConferencesController extends AbstractController
         return $this->render("conferences/edit.html.twig", ['conference' => $conference, 'form' => $form->createView(), 'bouton' => 'modifier']);
     }
     #[Route('/conference/supp/{id}', name: 'conference.supp')]
-    public function delete($id)
+    public function delete($id, EventDispatcherInterface $dispatcher)
     {
         $conference = $this->em->getRepository(Conference::class)->find($id);
+        $deletedConference = $conference;
         $this->em->remove($conference); // pour supprimer
         $this->em->flush();
+
+        $event = new SuppConferenceEvent($deletedConference, $this->getUser());
+        $dispatcher->dispatch($event);
+        // SuppConferenceEvent
+        $this->addFlash('failure','conference supprimée avec succès');
         return $this->redirectToRoute('conference.index');
     }
 
