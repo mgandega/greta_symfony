@@ -128,9 +128,9 @@ class ConferencesController extends AbstractController
             $this->em->flush();
 
 
-        $event = new ModifConferenceEvent($conference, $this->getuser());
-        $dispatcher->dispatch($event);
-        $this->addFlash('success','Conference modifiée avec succès');
+            $event = new ModifConferenceEvent($conference, $this->getuser());
+            $dispatcher->dispatch($event);
+            $this->addFlash('success', 'Conference modifiée avec succès');
             return $this->redirectToRoute('conference.index');
         }
         return $this->render("conferences/edit.html.twig", ['conference' => $conference, 'form' => $form->createView(), 'bouton' => 'modifier']);
@@ -146,7 +146,7 @@ class ConferencesController extends AbstractController
         $event = new SuppConferenceEvent($deletedConference, $this->getUser());
         $dispatcher->dispatch($event);
         // SuppConferenceEvent
-        $this->addFlash('failure','conference supprimée avec succès');
+        $this->addFlash('failure', 'conference supprimée avec succès');
         return $this->redirectToRoute('conference.index');
     }
 
@@ -187,11 +187,33 @@ class ConferencesController extends AbstractController
 
             $conference->setUser($this->getUser());
 
-            $this->em->persist($conference);
-            $this->em->flush();
+            // $this->em->persist($conference);
+            // $this->em->flush();
 
-            $event = new AjoutConferenceEvent($conference, $this->getUser());
-            $dispatcher->dispatch($event);
+            $time = time();
+
+            $session = $request->getSession();
+            // $session->set('date', $time);
+            $d = $session->get('d');
+            if (isset($d) and $time - $d > 30) {
+                $session->set('d', $time);
+                echo "passage de plus de 30 secondes";
+            } else {
+                if ($d) {
+                    $session->set('d', $time);
+                    echo "passage de moin de 30 secondes";
+                } else {
+                    $session->set('d', $time);
+                    echo "premier passage";
+                }
+            }
+            dd($session);
+
+            // $event = new AjoutConferenceEvent($conference, $this->getUser());
+            // $dispatcher->dispatch($event);
+
+
+
 
 
             return $this->redirectToRoute("conference.index");
