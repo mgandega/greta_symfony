@@ -84,6 +84,7 @@ class AppFixtures extends Fixture
             $conference->setTitre($faker->name)
                 ->setDescription($faker->text)
                 ->setLieu($faker->city)
+                ->setPrix($faker->numberBetween(40, 400))
                 ->setDate(new DateTimeImmutable())
                 ->setCategorie($faker->randomElement($cat))
                 ->setImage($this->getReference('image' . $i));

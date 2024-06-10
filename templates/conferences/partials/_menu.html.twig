@@ -1,28 +1,31 @@
 <h5> Filtre</h5><a href="{{ path('conferences.filtres')}}">effacer</a>
-
+{% set prices = [50,100,150,200,250,300,350,400] %}
 <div class="">
 <div class="row">
 <div class="col-sm-2">
 <form id="form" action="{{ path('conferences.filtres')}}" method="post">
-<table>
 <div class="taille">
-<tr><td>prix:</td><td><input type="number" name="prix" /></td></tr>
+date:<input type="date" name="dateRecherche" {% if selectedDate is defined %} selected{% endif %}/>
 </div>
 <div class="taille">
-<tr><td>date:</td><td><input type="date" name="dateRecherche"/></td></tr>
-</div>
-<div class="taille">
-<select name="categorie">
-<option value="">Categories</option>
-{% for categorie in categories %}
-<option value="{{ categorie.nom }}" {% if selectedCategorie is defined and categorie == selectedCategorie %} selected {% endif %}>{{ categorie.nom }} </option>
+<select name="prix">
+<option value="">Selectionner un prix</option>
+{% for price in prices %}
+<option value="{{ price }}" {% if selectedPrix is defined and price == selectedPrix %} selected {% endif %}>{{ price }}</option>
 {% endfor %}
 </select>
 </div>
 <div class="taille">
-<tr><td></td><td><input type="submit" /></td></tr>
+<select name="categorie">
+<option value="">Selectionner une categories</option>
+{% for categorie in categories %}
+<option value="{{ categorie.nom }}" {% if selectedCategorie is defined and categorie.nom == selectedCategorie %} selected {% endif %}>{{ categorie.nom }} </option>
+{% endfor %}
+</select>
 </div>
-</table>
+<div class="taille">
+<input type="submit" />
+</div>
 </form>
 <h5>Dernieres conférences:</h5>
     {{ render(controller(

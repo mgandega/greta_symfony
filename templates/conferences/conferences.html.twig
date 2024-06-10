@@ -10,13 +10,12 @@
         <p><a href="{{ path('conference.add') }}">Ajouter une conférence</a></p>
         {{ include("conferences/partials/_menu.html.twig") }}
         <ul>
-
-</UL>
+      </UL>
         </div>
         <div class="col-sm-8">
         {% for conference in conferences %}
         <div class="col-sm-3" style="display:inline-block;">
-        <div class="card border-secondary mb-3" style="max-width: 30rem;">
+        <div class="card border-secondary mb-4" style="max-width: 30rem;">
         {% if conference.image is empty %} 
         <div class="card-header"></div>
         {% else %}
@@ -27,7 +26,7 @@
         <div class="card-body">
         <p class="card-text">{{ conference.description }}</p>
         <h5 class="card-title">{{ conference.lieu }}</h5>
-        <h5 class="card-title">{{ conference.date|date('d-m-Y') }}</h5>
+        <i>prix: {{ conference.prix }}</i>
         <i> categorie: {{conference.categorie.nom }}</i>
         <a href="{{ url('conference.details',{'id':conference.id})}}">Details de la conférence</a>
         {% if conferences|length == 1 %}

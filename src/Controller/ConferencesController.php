@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use DateTime;
 use Exception;
 use App\AntiSpam;
 use DateTimeImmutable;
@@ -309,44 +310,47 @@ class ConferencesController extends AbstractController
     public function filtre(Request $request, PaginatorInterface $paginator)
     {
         // récupération des inputs
-        $categorie = $request->request->get('categorie');
-        $prix = $request->request->get('prix');
-        $date = $request->request->get('dateRecherche');
-
+        
         // mis en session des données
         $session = $request->getSession();
         // si on clique sur submit
-        if ($request->isMethod('POST')) {
-            $session->set('date', $date);
-            // $session->set('prix',$prix);
+        if ($request->isMethod("POST")) {
+            $date = !empty($request->request->get('dateRecherche')) ?$request->request->get('dateRecherche'): (new DateTime())->format("Y-m-d");
+            $prix = !empty($request->request->get('prix')) ?$request->request->get('prix'): null;
+            $categorie = !empty($request->request->get('categorie')) ?$request->request->get('categorie'): null;
+            $session->set('dateRecherche', $date);
+            $session->set('prix', $prix);
             $session->set('categorie', $categorie);
-            $date = $session->get('date');
+            
+        } elseif ($request->query->get('page')) {
+            $date = $session->get('dateRecherche');
+            $prix = $session->get('prix');
             $categorie = $session->get('categorie');
-        }
-        // si on clique sur la pagination (pour changer de page)
-        elseif ($request->isMethod('GET') && $request->query->get('page')) {
-
-        }
-        // pour réinintialiser les données
-        elseif ($request->isMethod('GET')) {
-            $session->remove('date');
-            // $session->remove('prix');
+        } elseif ($request->isMethod("GET")) {
+            $session->remove('dateRecherche');
+            $session->remove('prix');
             $session->remove('categorie');
+            $date = null;
+            $prix = null;
+            $categorie = null;
         }
-
-        $conferences = $this->em->getRepository(Conference::class)->recherche($date, $categorie);
+        
+        $conferences = $this->em->getRepository(Conference::class)->recherche($date,$prix, $categorie);
         $categories = $this->em->getRepository(Categorie::class)->findAll();
+    //     dump($conferences);
+    //   dd($date,$prix,$categorie);
         // dd($conferences);
         $paginator = $paginator->paginate(
             $conferences, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
             6 /*limit per page*/
         );
-        
         return $this->render("conferences/conferences.html.twig", [
             "conferences" => $paginator, 
             "categories" => $categories,
-            "selectedCategorie" => $categorie
+            "selectedCategorie" => $categorie,
+            "selectedPrix"=>$prix,
+            "selectedDate"=>$date
         ]);
     }
 }

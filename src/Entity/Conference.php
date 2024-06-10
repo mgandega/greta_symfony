@@ -71,6 +71,9 @@ class Conference
     #[ORM\ManyToMany(targetEntity: Competence::class, inversedBy: 'conferences')]
     private Collection $competence;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $prix = null;
+
 
     public function __construct()
     {
@@ -266,6 +269,18 @@ class Conference
     public function removeCompetence(Competence $competence): static
     {
         $this->competence->removeElement($competence);
+
+        return $this;
+    }
+
+    public function getPrix(): ?int
+    {
+        return $this->prix;
+    }
+
+    public function setPrix(?int $prix): static
+    {
+        $this->prix = $prix;
 
         return $this;
     }
