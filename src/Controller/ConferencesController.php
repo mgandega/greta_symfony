@@ -360,7 +360,7 @@ class ConferencesController extends AbstractController
         $session = $request->getSession();
 
         if ($request->isMethod("POST")) {
-            $date = !empty($request->request->get('date')) ?$request->request->get('date'): (new DateTime())->format("Y-m-d");
+            $date = !empty($request->request->get('date')) ?$request->request->get('date'): null;
             $prix = !empty($request->request->get('prix')) ?$request->request->get('prix'): null;
             $categorie = !empty($request->request->get('categorie')) ?$request->request->get('categorie'): null;
             $session->set('dateRecherche', $date);
@@ -386,7 +386,7 @@ class ConferencesController extends AbstractController
         // dd($date,$prix,$categorie);
         $conf = $this->em->getRepository(Conference::class)->recherche($date, $prix, $categorie);
 
-        // dd($conf->getResult());
+        // dd($conf);
 
         // dd($conf);
         // $resultatConferences = $conferences->getResult();

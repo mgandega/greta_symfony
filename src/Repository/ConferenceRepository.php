@@ -84,22 +84,26 @@ class ConferenceRepository extends ServiceEntityRepository
      */
     public function recherche($date,$prix,$categorie)
     {
-       $qb =  $this->createQueryBuilder('conf')
-            ->innerJoin('conf.categorie', 'categorie');
-            if($date != null){
-                $qb->andWhere('conf.date <= :val')
-                ->setParameter('val', $date." 00:00:00");
-            }
-            if($prix != null){
-                $qb->andWhere('conf.prix <= :val')
-                ->setParameter('val', $prix);
-            }
-            if($categorie != null){
-                // dd($categorie);  
-                $qb->andWhere('categorie.nom= :val')
-                ->setParameter('val', $categorie);
-            }
-           return $qb->getQuery();
+        // dd($date,$prix,$categorie);
+        $qb = $this->createQueryBuilder('conf')
+        ->innerJoin('conf.categorie', 'categorie');
+    
+    if ($date != null) {
+        $qb->andWhere('conf.date <= :date')
+           ->setParameter('date', $date . " 00:00:00");
+    }
+    if ($prix != null) {
+        $qb->andWhere('conf.prix <= :prix')
+           ->setParameter('prix', $prix);
+    }
+    if ($categorie != null) {   
+        // dd($categorie);
+        $qb->andWhere('categorie.nom = :nom')
+           ->setParameter('nom', $categorie);
+    }
+    
+    return $qb->getQuery();
+
         //    ->getResult();
     }
     /**

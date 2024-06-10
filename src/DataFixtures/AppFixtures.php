@@ -85,7 +85,8 @@ class AppFixtures extends Fixture
                 ->setDescription($faker->text)
                 ->setLieu($faker->city)
                 ->setPrix($faker->numberBetween(40, 400))
-                ->setDate(new DateTimeImmutable())
+                ->setDate(DateTimeImmutable::createFromMutable($faker->dateTimeBetween('now','+1 years')) )
+                // ->setDate($faker->dateTimeThisYear())
                 ->setCategorie($faker->randomElement($cat))
                 ->setImage($this->getReference('image' . $i));
                 foreach($com as $c){
