@@ -95,7 +95,8 @@ class ConferenceRepository extends ServiceEntityRepository
                 ->setParameter('val', $prix);
             }
             if($categorie != null){
-                $qb->andWhere('categorie.nom = :val')
+                // dd($categorie);  
+                $qb->andWhere('categorie.nom= :val')
                 ->setParameter('val', $categorie);
             }
            return $qb->getQuery();

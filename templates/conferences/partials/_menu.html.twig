@@ -1,38 +1,47 @@
-<h5> Filtre</h5><a href="{{ path('conferences.filtres')}}">effacer</a>
-{% set prices = [50,100,150,200,250,300,350,400] %}
-<div class="">
-<div class="row">
-<div class="col-sm-2">
-<form id="form" action="{{ path('conferences.filtres')}}" method="post">
-<div class="taille">
-date:<input type="date" name="dateRecherche" {% if selectedDate is defined %} selected{% endif %}/>
-</div>
-<div class="taille">
-<select name="prix">
-<option value="">Selectionner un prix</option>
-{% for price in prices %}
-<option value="{{ price }}" {% if selectedPrix is defined and price == selectedPrix %} selected {% endif %}>{{ price }}</option>
-{% endfor %}
-</select>
-</div>
-<div class="taille">
-<select name="categorie">
-<option value="">Selectionner une categories</option>
-{% for categorie in categories %}
-<option value="{{ categorie.nom }}" {% if selectedCategorie is defined and categorie.nom == selectedCategorie %} selected {% endif %}>{{ categorie.nom }} </option>
-{% endfor %}
-</select>
-</div>
-<div class="taille">
-<input type="submit" />
-</div>
-</form>
-<h5>Dernieres conférences:</h5>
+
+{# {% for categorie in categories %} #}
+{# {{ dump(categorie.nom)}} #}
+<h5>Filtre</h5>
+{% set prices = [50, 100, 150, 200, 250, 300, 350, 400] %}
+      <form action="{{ path('conferences.filtres')}}" method="POST">
+      <table><tr>
+      <td> prix: <br><br></td><td>
+      <select name="prix">
+          <option value="" >selectionner un prix</option>
+          {% for price in prices %}
+          <option value="{{ price }}" {% if selectedPrix is defined and price == selectedPrix %} selected {% endif %}> < {{ price }}</option>
+          {% endfor %}
+        </select><br><br></td></tr>
+        <tr> <td> date: <br><br></td><td> <input type="date" placeholder="Search" name="date" value="{{ selectedDate ??'' }}" /><br><br></td> </tr>
+        <tr>
+          <td>categorie:<br><br></td>
+          <td><select name="categorie">
+                <option value="">selectionner une catégorie</option>
+              {% for categorie in categories %}
+                <option value="{{ categorie.nom}}" {% if selectedCategorie is defined and categorie.nom == selectedCategorie %}selected{% endif %}>{{categorie.nom}}</option>
+              {% endfor %}
+        </select><br><br></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><input type="submit" class="btn btn-primary" value="Search"/></td>
+        </tr>
+      </table>
+
+      </form>
     {{ render(controller(
-        'App\\Controller\\ConferencesController::menu', {max: 3}
+        'App\\Controller\\ConferencesController::menu', {nom: categories[0].nom}
     )) }}
-</div>
-</div>
-</div>
+{# {% endfor %} #}
 
 
+  {# <ul>
+    {% for conference in lastConferences %}
+    <li><a href="{{path('conference.details',{'id':conference.id})}}">{{ conference.titre }}</a></li>
+    {% endfor %}
+  </ul>
+  <ul>
+    {% for categorie in categories %}
+    <li><a href="{{ path('conference.categorie',{'nom':categorie.nom})}}">{{categorie.nom}}</a></li>
+    {% endfor %}
+  </ul> #}

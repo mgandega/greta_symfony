@@ -96,8 +96,9 @@ class ConferencesController extends AbstractController
         // }
         // je recupere la conference par rapport à son id (l'id qu'on lui a donné)
         $conference = $this->em->getRepository(Conference::class)->find($id); //query("select * from conference where id=$id");
+        $categories = $this->em->getRepository(categorie::class)->findAll();
 
-        return $this->render("conferences/conference.html.twig", ['conference' => $conference]);
+        return $this->render("conferences/conference.html.twig", ['conference' => $conference,'categories'=>$categories ]);
     }
 
     #[Route('/conference/edit/{id}', name: 'conference.edit')]
@@ -306,22 +307,65 @@ class ConferencesController extends AbstractController
         return $this->render("conferences/ajoutCompetence.html.twig", ["form" => $form->createView()]);
     }
 
-    #[Route('conferences/filtre', name: 'conferences.filtres')]
+    // #[Route('conferences/filtre', name: 'conferences.filtres')]
+    // public function filtre(Request $request, PaginatorInterface $paginator)
+    // {
+
+    //     // récupération des inputs
+        
+    //     // mis en session des données
+    //     $session = $request->getSession();
+    //     // si on clique sur submit
+    //     if ($request->isMethod("POST")) {
+    //         $date = !empty($request->request->get('dateRecherche')) ?$request->request->get('dateRecherche'): (new DateTime())->format("Y-m-d");
+    //         $prix = !empty($request->request->get('prix')) ?$request->request->get('prix'): null;
+    //         $categorie = !empty($request->request->get('categorie')) ?$request->request->get('categorie'): null;
+    //         $session->set('dateRecherche', $date);
+    //         $session->set('prix', $prix);
+    //         $session->set('categorie', $categorie);
+    //         // dd($date,$prix,$categorie);
+    //     } elseif ($request->query->get('page')) {
+    //         $date = $session->get('dateRecherche');
+    //         $prix = $session->get('prix');
+    //         $categorie = $session->get('categorie');
+    //     } elseif ($request->isMethod("GET")) {
+    //         $session->remove('dateRecherche');
+    //         $session->remove('prix');
+    //         $session->remove('categorie');
+    //         $date = null;
+    //         $prix = null;
+    //         $categorie = null;
+    //     }
+        
+    //     $conferences = $this->em->getRepository(Conference::class)->recherche($date,$prix, $categorie);
+    //     $categories = $this->em->getRepository(Categorie::class)->findAll();
+
+    //     dd($conferences->getResult());
+    //     $paginator = $paginator->paginate(
+    //         $conferences, /* query NOT result */
+    //         $request->query->getInt('page', 1), /*page number*/
+    //         6 /*limit per page*/
+    //     );
+    //     return $this->render("conferences/conferences.html.twig", [
+    //         "conferences" => $paginator, 
+    //         "categories" => $categories,
+    //         "selectedCategorie" => $categorie,
+    //         "selectedPrix"=>$prix,
+    //         "selectedDate"=>$date
+    //     ]);
+    // }
+    #[Route('/conferences/recherche', name: 'conferences.filtres')]
     public function filtre(Request $request, PaginatorInterface $paginator)
     {
-        // récupération des inputs
-        
-        // mis en session des données
         $session = $request->getSession();
-        // si on clique sur submit
+
         if ($request->isMethod("POST")) {
-            $date = !empty($request->request->get('dateRecherche')) ?$request->request->get('dateRecherche'): (new DateTime())->format("Y-m-d");
+            $date = !empty($request->request->get('date')) ?$request->request->get('date'): (new DateTime())->format("Y-m-d");
             $prix = !empty($request->request->get('prix')) ?$request->request->get('prix'): null;
             $categorie = !empty($request->request->get('categorie')) ?$request->request->get('categorie'): null;
             $session->set('dateRecherche', $date);
             $session->set('prix', $prix);
             $session->set('categorie', $categorie);
-            
         } elseif ($request->query->get('page')) {
             $date = $session->get('dateRecherche');
             $prix = $session->get('prix');
@@ -334,23 +378,34 @@ class ConferencesController extends AbstractController
             $prix = null;
             $categorie = null;
         }
-        
-        $conferences = $this->em->getRepository(Conference::class)->recherche($date,$prix, $categorie);
+
+
         $categories = $this->em->getRepository(Categorie::class)->findAll();
-    //     dump($conferences);
-    //   dd($date,$prix,$categorie);
-        // dd($conferences);
-        $paginator = $paginator->paginate(
-            $conferences, /* query NOT result */
+        // $lastConferences = $this->em->getRepository(Conference::class)->lastConferences();
+
+        // dd($date,$prix,$categorie);
+        $conf = $this->em->getRepository(Conference::class)->recherche($date, $prix, $categorie);
+
+        // dd($conf->getResult());
+
+        // dd($conf);
+        // $resultatConferences = $conferences->getResult();
+        $conferences = $paginator->paginate(
+            $conf, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
             6 /*limit per page*/
         );
+        // dd($date);
+        // $conferences = $pagination->getItems();
+        // $val ='hello';
         return $this->render("conferences/conferences.html.twig", [
-            "conferences" => $paginator, 
-            "categories" => $categories,
-            "selectedCategorie" => $categorie,
-            "selectedPrix"=>$prix,
-            "selectedDate"=>$date
+            'selectedCategorie' => $categorie,
+            'selectedPrix' => $prix,
+            'selectedDate' => $date,
+            'categories' => $categories,
+            'conferences' => $conferences,
+            // 'lastConferences' => $lastConferences
         ]);
+        // return $this->render('conferences/conf.html.twig', []);
     }
 }
