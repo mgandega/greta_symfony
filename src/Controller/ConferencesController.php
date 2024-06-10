@@ -221,7 +221,7 @@ class ConferencesController extends AbstractController
                 }
             }
 
-     
+
 
 
             $event = new AjoutConferenceEvent($conference, $this->getUser());
@@ -305,8 +305,48 @@ class ConferencesController extends AbstractController
         return $this->render("conferences/ajoutCompetence.html.twig", ["form" => $form->createView()]);
     }
 
-    #[Route('conferences/filtre', name:'conferences.filtres')]
-    public function filtre(){
-        dd($_POST);
+    #[Route('conferences/filtre', name: 'conferences.filtres')]
+    public function filtre(Request $request, PaginatorInterface $paginator)
+    {
+        // récupération des inputs
+        $categorie = $request->request->get('categorie');
+        $prix = $request->request->get('prix');
+        $date = $request->request->get('dateRecherche');
+
+        // mis en session des données
+        $session = $request->getSession();
+        // si on clique sur submit
+        if ($request->isMethod('POST')) {
+            $session->set('date', $date);
+            // $session->set('prix',$prix);
+            $session->set('categorie', $categorie);
+            $date = $session->get('date');
+            $categorie = $session->get('categorie');
+        }
+        // si on clique sur la pagination (pour changer de page)
+        elseif ($request->isMethod('GET') && $request->query->get('page')) {
+
+        }
+        // pour réinintialiser les données
+        elseif ($request->isMethod('GET')) {
+            $session->remove('date');
+            // $session->remove('prix');
+            $session->remove('categorie');
+        }
+
+        $conferences = $this->em->getRepository(Conference::class)->recherche($date, $categorie);
+        $categories = $this->em->getRepository(Categorie::class)->findAll();
+        // dd($conferences);
+        $paginator = $paginator->paginate(
+            $conferences, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            6 /*limit per page*/
+        );
+        
+        return $this->render("conferences/conferences.html.twig", [
+            "conferences" => $paginator, 
+            "categories" => $categories,
+            "selectedCategorie" => $categorie
+        ]);
     }
 }

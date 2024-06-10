@@ -1,4 +1,4 @@
-<h5> Filtre</h5>
+<h5> Filtre</h5><a href="{{ path('conferences.filtres')}}">effacer</a>
 
 <div class="">
 <div class="row">
@@ -15,7 +15,7 @@
 <select name="categorie">
 <option value="">Categories</option>
 {% for categorie in categories %}
-<option value="{{ categorie.nom }}">{{ categorie.nom }} </option>
+<option value="{{ categorie.nom }}" {% if selectedCategorie is defined and categorie == selectedCategorie %} selected {% endif %}>{{ categorie.nom }} </option>
 {% endfor %}
 </select>
 </div>

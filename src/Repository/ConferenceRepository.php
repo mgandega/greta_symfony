@@ -82,6 +82,29 @@ class ConferenceRepository extends ServiceEntityRepository
     /**
      * @return Conference[] Returns an array of Conference objects
      */
+    public function recherche($date,$categorie)
+    {
+       $qb =  $this->createQueryBuilder('conf')
+            ->innerJoin('conf.categorie', 'c');
+
+            if($date != null){
+                $qb->andWhere('c.date = :val')
+                ->setParameter('val', $date);
+            }
+            // if($prix != null){
+            //     $qb->andWhere('c.prix = :val')
+            //     ->setParameter('val', $prix);
+            // }
+            if($categorie != null){
+                $qb->andWhere('c.nom = :val')
+                ->setParameter('val', $categorie);
+            }
+           return $qb->getQuery();
+        //    ->getResult();
+    }
+    /**
+     * @return Conference[] Returns an array of Conference objects
+     */
     public function mes5dernieresConferences(): array
     {
         return $this->createQueryBuilder('conf')
