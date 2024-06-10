@@ -1,4 +1,35 @@
-<h5>Affichage par conférence:</h5>
+<h5> Filtre</h5>
+
+<div class="">
+<div class="row">
+<div class="col-sm-2">
+<form id="form" action="{{ path('conferences.filtres')}}" method="post">
+<table>
+<div class="taille">
+<tr><td>prix:</td><td><input type="number" name="prix" /></td></tr>
+</div>
+<div class="taille">
+<tr><td>date:</td><td><input type="date" name="dateRecherche"/></td></tr>
+</div>
+<div class="taille">
+<select name="categorie">
+<option value="">Categories</option>
+{% for categorie in categories %}
+<option value="{{ categorie.nom }}">{{ categorie.nom }} </option>
+{% endfor %}
+</select>
+</div>
+<div class="taille">
+<tr><td></td><td><input type="submit" /></td></tr>
+</div>
+</table>
+</form>
+<h5>Dernieres conférences:</h5>
     {{ render(controller(
         'App\\Controller\\ConferencesController::menu', {max: 3}
     )) }}
+</div>
+</div>
+</div>
+
+

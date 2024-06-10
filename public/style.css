@@ -1,3 +1,7 @@
 .navigation li{
     border: 5px solid black;
 }
+
+#form{
+    border: 2px solid red !important;
+}

@@ -25,8 +25,10 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Form\Exception\InvalidArgumentException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ConferencesController extends AbstractController
 {
@@ -157,7 +159,6 @@ class ConferencesController extends AbstractController
         AntiSpam $antiSpam,
         EventDispatcherInterface $dispatcher
     ) {
-
         // en mettant 'validation_groups'=>'create', on est obligé de respecter la contrainte de validation
         $conference = new Conference();
         $form = $this->createForm(ConferenceType::class, $conference, ['button_label' => 'Ajouter une conférence', 'validation_groups' => 'create']);
@@ -202,7 +203,8 @@ class ConferencesController extends AbstractController
                 // on texte si les mots abandon et demotivation se trouve dans le tableau ($tab)
                 foreach ($motsInterdits as $mot) {
                     if (in_array($mot, $tab)) {
-                        throw new Exception("la description contient au moin un mot interdit");
+                        // throw new InvalidArgumentException("la description contient au moin un mot interdit");
+                        throw new InvalidArgumentException("la description contient au moin un mot interdit");
                     }
                 }
                 // fin vérification
@@ -301,5 +303,10 @@ class ConferencesController extends AbstractController
             return $this->redirectToRoute('conference.index');
         }
         return $this->render("conferences/ajoutCompetence.html.twig", ["form" => $form->createView()]);
+    }
+
+    #[Route('conferences/filtre', name:'conferences.filtres')]
+    public function filtre(){
+        dd($_POST);
     }
 }
