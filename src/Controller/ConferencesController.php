@@ -98,7 +98,7 @@ class ConferencesController extends AbstractController
         $conference = $this->em->getRepository(Conference::class)->find($id); //query("select * from conference where id=$id");
         $categories = $this->em->getRepository(categorie::class)->findAll();
 
-        return $this->render("conferences/conference.html.twig", ['conference' => $conference,'categories'=>$categories ]);
+        return $this->render("conferences/conference.html.twig", ['conference' => $conference, 'categories' => $categories]);
     }
 
     #[Route('/conference/edit/{id}', name: 'conference.edit')]
@@ -223,9 +223,6 @@ class ConferencesController extends AbstractController
                 }
             }
 
-
-
-
             $event = new AjoutConferenceEvent($conference, $this->getUser());
             $dispatcher->dispatch($event);
 
@@ -296,10 +293,12 @@ class ConferencesController extends AbstractController
     {
 
         $competence = new Competence();
+
         $form = $this->createForm(CompetenceType::class, $competence);
         $form->handleRequest($request);
         // si le formulaire est soumis et est valide
         if ($form->isSubmitted() && $form->isvalid()) {
+
             $this->em->persist($competence);
             $this->em->flush();
             return $this->redirectToRoute('conference.index');
@@ -312,7 +311,7 @@ class ConferencesController extends AbstractController
     // {
 
     //     // récupération des inputs
-        
+
     //     // mis en session des données
     //     $session = $request->getSession();
     //     // si on clique sur submit
@@ -336,7 +335,7 @@ class ConferencesController extends AbstractController
     //         $prix = null;
     //         $categorie = null;
     //     }
-        
+
     //     $conferences = $this->em->getRepository(Conference::class)->recherche($date,$prix, $categorie);
     //     $categories = $this->em->getRepository(Categorie::class)->findAll();
 
@@ -360,9 +359,9 @@ class ConferencesController extends AbstractController
         $session = $request->getSession();
 
         if ($request->isMethod("POST")) {
-            $date = !empty($request->request->get('date')) ?$request->request->get('date'): null;
-            $prix = !empty($request->request->get('prix')) ?$request->request->get('prix'): null;
-            $categorie = !empty($request->request->get('categorie')) ?$request->request->get('categorie'): null;
+            $date = !empty($request->request->get('date')) ? $request->request->get('date') : null;
+            $prix = !empty($request->request->get('prix')) ? $request->request->get('prix') : null;
+            $categorie = !empty($request->request->get('categorie')) ? $request->request->get('categorie') : null;
             $session->set('dateRecherche', $date);
             $session->set('prix', $prix);
             $session->set('categorie', $categorie);

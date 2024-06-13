@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello PanierController!{% endblock %}
+
+{% block body %}
+            {{ conference.prix }}
+{# {{ parent() }} #}
+    <table class="table">
+        <tr>
+            <td>id</td>
+            <td>titre</td>
+            <td>quantité</td>
+            <td>prix</td>
+            <td>prix Total</td>
+        </tr>
+        <tr>
+            {# {{ dump(conference) }} #}
+
+       {% for index,  monPaniers in panier %} 
+            {% for monpanier in monPaniers %}
+                <td>{{ monpanier }}</td>
+            {% endfor %}
+        {% endfor %}
+        </tr>
+    </table>
+{% endblock %}

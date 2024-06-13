@@ -31,6 +31,17 @@
         <form action="">
         <input type="hidden" name="idConference" value="{{ conference.id }}" />
         <input type="submit" value="commenter"/>
+        </form><br>
+
+        <form action="{{ path('app_panier')}}" method="POST">
+        <select name="quantite">
+            <option value="">Quantité</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select><br>
+        <input type="hidden" name="conferenceId" value="{{ conference.id }}" /><br>
+        <input type="submit" value="Ajouter au panier" />
         </form>
         {# <a href="?idConference={{ conference.id }}" >Commenter </a> #}
         <a href="{{path('conference.index')}}">Retour</a>

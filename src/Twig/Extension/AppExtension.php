@@ -17,6 +17,7 @@ class AppExtension extends AbstractExtension
             // Reference: https://twig.symfony.com/doc/3.x/advanced.html#automatic-escaping
             new TwigFilter('truncate', [$this, 'tronque']),
             new TwigFilter('unique', [$this, 'uniqueFilter']),
+            new TwigFilter('montant', [$this, 'montant']),
         ];
     }
 
@@ -43,5 +44,13 @@ class AppExtension extends AbstractExtension
     }
     public function uniqueFilter(array $array): array {
         return array_unique($array);
+        }
+
+        public function montant(){
+            $total = 0;
+            for ($i=0; $i< count($_SESSION['panier']['conferenceId']); $i++){
+                $total += $_SESSION['panier']['quantite'][$i] * $_SESSION['panier']['prix'][$i];
+            }
+            return round($total, 2);
         }
 }
