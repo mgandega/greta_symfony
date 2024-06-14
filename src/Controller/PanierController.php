@@ -19,6 +19,7 @@ class PanierController extends AbstractController
     #[Route('/panier', name: 'app_panier')]
     public function index(EntityManagerInterface $manager, Request $request): Response
     {
+        
         $session = $this->requestStack->getSession();
         $conferenceId = $request->request->get('conferenceId');
         $quantite = $request->request->get('quantite');
@@ -30,9 +31,11 @@ class PanierController extends AbstractController
 
 
         $panier = $this->getPanier();
+        $total = $this->calculPrixTotal();
 
         return $this->render('panier/index.html.twig', [
-            'panier' => $panier
+            'panier' => $panier,
+            'total'=>$total
         ]);
     }
 
@@ -51,6 +54,7 @@ class PanierController extends AbstractController
                 'prix' => [],
             ]);
         }
+
     }
 
     public function traitementPanier($conferenceId, $quantite, $titre, $description, $prix)
@@ -116,6 +120,18 @@ class PanierController extends AbstractController
             // mise à jour de la session panier
             $session->set('panier', $panier);
         }
+
+    }
+
+    public function calculPrixTotal(){
+        $panier = $this->getPanier();
+        $total = 0;
+
+        foreach($panier['quantite'] as $index => $quantite ){
+            $total +=  $quantite * $panier['prix'][$index];
+        }
+
+        return $total;
 
     }
 }

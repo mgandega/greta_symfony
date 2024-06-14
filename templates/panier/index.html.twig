@@ -20,18 +20,19 @@
             {% endfor %}
         {% endfor %} #}
 
+{% if panier.conferenceId|length > 0 %}
 {# cette boucle nous permet de récupérer surtout la clé ( ce qui nous interesse le plus )#}
         {% for key, value in  panier.conferenceId %}
         <tr> 
             <td>{{ panier.conferenceId[key]}}</td><td>{{ panier.titre[key] }}</td><td>{{ panier.quantite[key] }}</td><td>{{ panier.prix[key]}}</td><td>{{ panier.quantite[key] * panier.prix[key] }}</td><td><a href="{{ path('app_panier_a_supprimer',{'conferenceId':panier.conferenceId[key]}) }}">supprimer</a></td>
         </tr>
         {% endfor %}
+{% else %}
+<tr style="height: 100px;"><td colspan="3"></td><td><i>panier vide</i></td><td></td></tr>
+{% endif %}
 
 
-        <tr><td></td><td></td><td></td><td></td><td> </td></tr>
-        <tr><td></td><td></td><td></td><td></td><td> </td></tr>
-        <tr><td></td><td></td><td></td><td></td><td> </td></tr>
-        <tr><td></td><td></td><td></td><td>Prix Total</td><td> </td></tr>
+        <tr ><td></td><td></td><td></td><td>Prix Total : </td><td>{{ total~' €' }} </td></tr>
     </table>
 
 {% endblock %}
