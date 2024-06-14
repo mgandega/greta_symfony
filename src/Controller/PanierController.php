@@ -17,17 +17,22 @@ class PanierController extends AbstractController
     {
     }
     #[Route('/panier', name: 'app_panier')]
-    public function index(EntityManagerInterface $manager): Response
+    public function index(EntityManagerInterface $manager, Request $request): Response
     {
         $session = $this->requestStack->getSession();
-        $conference = $manager->getRepository(Conference::class)->find($_POST['conferenceId']);
-        $monPanier =  $this->traitementPanier($_POST['conferenceId'], $_POST['quantite'], $conference->getTitre(), $conference->getDescription(), $conference->getPrix());
+        $conferenceId = $request->request->get('conferenceId');
+        $quantite = $request->request->get('quantite');
+
+        if($conferenceId && $quantite){
+            $conference = $manager->getRepository(Conference::class)->find($_POST['conferenceId']);
+            $monPanier =  $this->traitementPanier($conferenceId, $quantite, $conference->getTitre(), $conference->getDescription(), $conference->getPrix());
+        }
+
 
         $panier = $this->getPanier();
 
         return $this->render('panier/index.html.twig', [
-            'panier' => $panier,
-            'conference' => $conference
+            'panier' => $panier
         ]);
     }
 
@@ -39,34 +44,34 @@ class PanierController extends AbstractController
         if (!$session->has('panier')) {
 
             // array() => []
-            $session->set('panier',[
-                'conferenceId' =>[],
-                'titre' =>[],
-                'quantite' =>[],
-                'prix' =>[],
+            $session->set('panier', [
+                'conferenceId' => [],
+                'titre' => [],
+                'quantite' => [],
+                'prix' => [],
             ]);
-            
         }
-
     }
 
     public function traitementPanier($conferenceId, $quantite, $titre, $description, $prix)
     {
         $session = $this->requestStack->getSession();
-        // initialisation du panier 
+        // initialisation du panier pour verifier si on vient d'ajouter une conférence ou pas
         $this->initialisationPanier();
         $panier = $session->get('panier');
 
+
+        // cette fonction permet de tester si une valeur existe dans un tableau, si oui elle retourne la premiere clé correspondante, si non elle retourne false
         $position = array_search($conferenceId, $panier['conferenceId']);
 
-        
         // if ($position == true) != $position !== false
-        
+
         // si le produit existe déja dans le panier
         if ($position !== false) {
             // $panier['quantite'][$position] += $quantite;
             $panier['quantite'][$position] += $quantite;
         } else {
+            // on vient juste d'ajouter une conférence au panier
             $panier['conferenceId'][] = $conferenceId;
             $panier['titre'][] = $titre;
             $panier['quantite'][] = $quantite;
@@ -75,12 +80,42 @@ class PanierController extends AbstractController
 
         // mise à jour du panier (en session)
         $session->set('panier', $panier);
-
     }
 
-    public function getPanier(){
+    // récupéreration du panier (en session)
+    public function getPanier()
+    {
         $session = $this->requestStack->getSession();
         $panier = $session->get('panier');
         return  $panier;
+    }
+
+    #[Route('/panier_a_supprimer/{conferenceId}', name: 'app_panier_a_supprimer')]
+    public function  panier_a_supprimer($conferenceId)
+    {
+        // suppression
+        $this->supprimerProduit($conferenceId);
+
+        // redirection
+        return $this->redirectToRoute('app_panier');
+    }
+
+    #[Route('supprimerProduit', name:'supprimerProduit')]
+    public function supprimerProduit($conferenceId){
+        
+        $panier = $this->getPanier();
+        $position = array_search($conferenceId, $panier['conferenceId']);
+
+        if($position !== false){
+            $session = $this->requestStack->getSession();
+            array_splice($panier['conferenceId'], $position, 1);
+            array_splice($panier['titre'], $position, 1);
+            array_splice($panier['quantite'], $position, 1);
+            array_splice($panier['prix'], $position, 1);
+
+            // mise à jour de la session panier
+            $session->set('panier', $panier);
+        }
+
     }
 }

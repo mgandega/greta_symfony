@@ -20,12 +20,13 @@
             {% endfor %}
         {% endfor %} #}
 
-{{ dump(panier) }}
+{# cette boucle nous permet de récupérer surtout la clé ( ce qui nous interesse le plus )#}
         {% for key, value in  panier.conferenceId %}
         <tr> 
-            <td>{{ panier.conferenceId[key]}}</td><td>{{ panier.titre[key] }}</td><td>{{ panier.quantite[key] }}</td><td>{{ panier.prix[key]}}</td><td>{{ panier.quantite[key] * panier.prix[key] }}</td><td><a href="">supprimer</a></td>
+            <td>{{ panier.conferenceId[key]}}</td><td>{{ panier.titre[key] }}</td><td>{{ panier.quantite[key] }}</td><td>{{ panier.prix[key]}}</td><td>{{ panier.quantite[key] * panier.prix[key] }}</td><td><a href="{{ path('app_panier_a_supprimer',{'conferenceId':panier.conferenceId[key]}) }}">supprimer</a></td>
         </tr>
         {% endfor %}
+
 
         <tr><td></td><td></td><td></td><td></td><td> </td></tr>
         <tr><td></td><td></td><td></td><td></td><td> </td></tr>
