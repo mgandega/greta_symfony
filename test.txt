@@ -7,4 +7,4 @@
 - les noms des class commencent se termine toujours par test
 - les noms des methodes commencent toujours par test
 - ne pas oublier de mettre le fichier bootstrap.PHP À LA racine
- 
+- bin/console make:test
