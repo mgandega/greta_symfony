@@ -1,0 +1,10 @@
+/********* TEST UNIT *********/
+- creer un fichier à la racine : .env.test.local
+- on a mis aà l'intérieur : les proprietes de la base de données :(DATABASE_URL="mysql://root:root@127.0.0.1:8889/conf_greta?serverVersion=8.0.32&charset=utf8mb4"
+)
+- bin/console doctrine:database:create --env=test
+- bin/console doctrine:schema:create --env=test
+- les noms des class commencent se termine toujours par test
+- les noms des methodes commencent toujours par test
+- ne pas oublier de mettre le fichier bootstrap.PHP À LA racine
+ 
