@@ -32,16 +32,3 @@
     {{ render(controller(
         'App\\Controller\\ConferencesController::menu', {nom: categories[0].nom}
     )) }}
-{# {% endfor %} #}
-
-
-  {# <ul>
-    {% for conference in lastConferences %}
-    <li><a href="{{path('conference.details',{'id':conference.id})}}">{{ conference.titre }}</a></li>
-    {% endfor %}
-  </ul>
-  <ul>
-    {% for categorie in categories %}
-    <li><a href="{{ path('conference.categorie',{'nom':categorie.nom})}}">{{categorie.nom}}</a></li>
-    {% endfor %}
-  </ul> #}
