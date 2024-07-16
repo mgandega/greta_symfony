@@ -38,3 +38,4 @@ phpunit:
   script:
     - php bin/phpunit --configuration phpunit.xml.dist
   allow_failure: false
+  
