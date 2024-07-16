@@ -83,4 +83,27 @@ class ConferenceCrudTest extends WebTestCase
     //     $client->submit($form);
     //     $this->assertResponseIsSuccessful();
     // }
+
+    public function testDeleteConference(){
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/login');
+        $form = $crawler->selectButton('Se connecter')->form();
+        $form['email'] = 'darrion66@schimmel.com';
+        $form['password'] = 'blablabla';
+        $client->submit($form);
+
+        $router = $this->getContainer()->get('router');
+        $manager = $this->getContainer()->get('doctrine.orm.entity_manager');
+
+        $user = $manager->getRepository(User::class)->findAll();
+        $conference = $manager->getRepository(Conference::class)->findOneBy(['user' => $user[1]]);
+
+        $conferences = $manager->getRepository(Conference::class)->findAll();
+        $this->assertIsArray($conferences);
+        $crawler = $client->request('GET', $router->generate('conference.supp', ['id' => $conference->getId()]));
+        // ex: /conference/edit/11
+        $this->assertRouteSame('conference.supp');
+        // $client->followRedirect();
+        $this->assertResponseIsSuccessful();
+    }
 }
