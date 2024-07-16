@@ -29,6 +29,7 @@ class AppFixtures extends Fixture
         // l'entité: commentaire
 
         $categories = ["conference sur Symfony", "conference sur Drupal", "conference sur Laravel"];
+        $utilisateur = [];
         $cat = [];
         for ($i = 0; $i <3 ; $i++) {
             $categorie = new Categorie();
@@ -53,12 +54,14 @@ class AppFixtures extends Fixture
            ->setLastName($faker->name);
             $hashedPassword = $this->passwordHasher->hashPassword(
                 $user,
-                $faker->name
+                'blablabla'
+                // $faker->name
             );
             $user->setPassword($hashedPassword);
             $user->setRoles($faker->randomElement([["ROLE_ADMIN"],["ROLE_USER"]]))
             ->setTelephone($faker->phoneNumber());
             $manager->persist($user);
+            $utilisateur[] = $user;
             
         }
 
@@ -93,6 +96,7 @@ class AppFixtures extends Fixture
                     $conference->addCompetence($c);
                 }
                 $conference->setFavorite(0);
+                $conference->setUser($faker->randomElement($utilisateur));
             $manager->persist($conference);
             $this->addReference('conference' . $i, $conference);
         }
