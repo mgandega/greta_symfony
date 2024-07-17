@@ -31,6 +31,7 @@ class CategorieController extends AbstractController
     #[Route('/categorie/list', name: 'list_categorie')]
     public function list(EntityManagerInterface $manager){
        return new Response('les categories');
+       
         $categories = $manager->getRepository(Categorie::class)->findAll();
         return $this->render("categories/list.html.twig",['categories'=>$categories]);
     }
